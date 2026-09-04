@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computer Science Classes</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #8b949e;
+      margin-bottom: 32px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 14px;
+      padding: 32px 20px;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #58a6ff;
+      background: #1c2128;
+    }
+
+    .icon {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: #8b949e;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      margin-top: 30px;
+      color: #6e7681;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>Computer Science Classes</h1>
+    <p class="subtitle">Elegí una clase para comenzar.</p>
+
+    <section class="cards">
+      <div class="card" data-url="AI.html">
+        <div class="icon">🤖</div>
+        <h2>Introducción a la IA</h2>
+        <p>Clase sobre inteligencia artificial.</p>
+      </div>
+
+      <div class="card" data-url="AI%20PROMPTS.html">
+        <div class="icon">💬</div>
+        <h2>Prompts de IA</h2>
+        <p>Cómo escribir mejores instrucciones para una IA.</p>
+      </div>
+    </section>
+
+    <footer>
+      <span id="year"></span> · computer-science-classes
+    </footer>
+  </main>
+
+  <script>
+    document.querySelectorAll(".card").forEach(card => {
+      card.addEventListener("click", () => {
+        window.location.href = card.dataset.url;
+      });
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
