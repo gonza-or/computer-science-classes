@@ -1,612 +1,2288 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introducción a la Inteligencia Artificial</title>
-<style>
-  :root{
-    --bg:#050713; --bg2:#0a0e27; --panel:#111633;
-    --violet:#8b5cf6; --blue:#3b82f6; --cyan:#22d3ee; --green:#4ade80;
-    --amber:#fbbf24; --red:#fb7185; --white:#f8faff; --gray:#aab2d5;
-    --shadow:0 22px 60px rgba(0,0,0,.34);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--white)}
-  button{font:inherit}
-  .deck{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--bg)}
-  .ambient{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-  .orb{position:absolute;border-radius:50%;filter:blur(18px);opacity:.18;animation:float 12s ease-in-out infinite alternate}
-  .orb.o1{width:300px;height:300px;background:var(--violet);left:-90px;top:-70px}
-  .orb.o2{width:260px;height:260px;background:var(--cyan);right:-70px;bottom:-60px;animation-delay:-4s}
-  .orb.o3{width:160px;height:160px;background:var(--blue);left:55%;top:18%;animation-delay:-7s}
-  @keyframes float{to{transform:translate(35px,28px) scale(1.12)}}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Introducción a la Inteligencia Artificial</title>
+    <style>
+      :root {
+        --bg: #050713;
+        --bg2: #0a0e27;
+        --panel: #111633;
+        --violet: #8b5cf6;
+        --blue: #3b82f6;
+        --cyan: #22d3ee;
+        --green: #4ade80;
+        --amber: #fbbf24;
+        --red: #fb7185;
+        --white: #f8faff;
+        --gray: #aab2d5;
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        color: var(--white);
+      }
+      button {
+        font: inherit;
+      }
+      .deck {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      .ambient {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(18px);
+        opacity: 0.18;
+        animation: float 12s ease-in-out infinite alternate;
+      }
+      .orb.o1 {
+        width: 300px;
+        height: 300px;
+        background: var(--violet);
+        left: -90px;
+        top: -70px;
+      }
+      .orb.o2 {
+        width: 260px;
+        height: 260px;
+        background: var(--cyan);
+        right: -70px;
+        bottom: -60px;
+        animation-delay: -4s;
+      }
+      .orb.o3 {
+        width: 160px;
+        height: 160px;
+        background: var(--blue);
+        left: 55%;
+        top: 18%;
+        animation-delay: -7s;
+      }
+      @keyframes float {
+        to {
+          transform: translate(35px, 28px) scale(1.12);
+        }
+      }
 
-  .slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:5.5vh 7vw 8vh;text-align:center;z-index:2}
-  .slide.active{display:flex;animation:slideIn .48s cubic-bezier(.2,.8,.2,1)}
-  @keyframes slideIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
-  .content{width:min(1180px,100%);position:relative;z-index:2}
-  h1{font-size:clamp(2.5rem,6vw,5rem);line-height:1.02;text-transform:uppercase;font-weight:950;letter-spacing:-.035em;text-shadow:0 0 35px rgba(139,92,246,.42)}
-  h2{font-size:clamp(2rem,4.5vw,3.4rem);line-height:1.06;text-transform:uppercase;font-weight:900;margin-bottom:1.15rem}
-  h3{font-size:1.3rem}
-  .subtitle{font-size:clamp(1.05rem,2.2vw,1.5rem);color:var(--cyan);font-weight:700;margin-top:1.25rem}
-  .tagline{color:var(--gray);font-size:clamp(.95rem,1.8vw,1.2rem);margin-top:1.4rem;line-height:1.45}
-  .accent{color:var(--cyan)}
-  .smallcaps{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:800}
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 5.5vh 7vw 8vh;
+        text-align: center;
+        z-index: 2;
+      }
+      .slide.active {
+        display: flex;
+        animation: slideIn 0.48s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .content {
+        width: min(1180px, 100%);
+        position: relative;
+        z-index: 2;
+      }
+      h1 {
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        line-height: 1.02;
+        text-transform: uppercase;
+        font-weight: 950;
+        letter-spacing: -0.035em;
+        text-shadow: 0 0 35px rgba(139, 92, 246, 0.42);
+      }
+      h2 {
+        font-size: clamp(2rem, 4.5vw, 3.4rem);
+        line-height: 1.06;
+        text-transform: uppercase;
+        font-weight: 900;
+        margin-bottom: 1.15rem;
+      }
+      h3 {
+        font-size: 1.3rem;
+      }
+      .subtitle {
+        font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+        color: var(--cyan);
+        font-weight: 700;
+        margin-top: 1.25rem;
+      }
+      .tagline {
+        color: var(--gray);
+        font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+        margin-top: 1.4rem;
+        line-height: 1.45;
+      }
+      .accent {
+        color: var(--cyan);
+      }
+      .smallcaps {
+        font-size: 0.76rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+        font-weight: 800;
+      }
 
-  .hero-chip{display:inline-flex;gap:.55rem;align-items:center;padding:.55rem .85rem;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:999px;margin-bottom:1.4rem;color:var(--gray);font-weight:700}
-  .hero-chip b{color:var(--green)}
-  .prompt-question{font-size:clamp(1.25rem,2.8vw,2rem);font-weight:850;margin-top:2rem;color:var(--white)}
-  .prompt-question span{display:inline-block;animation:pulseText 1.8s ease-in-out infinite}
-  @keyframes pulseText{50%{text-shadow:0 0 22px rgba(34,211,238,.7)}}
+      .hero-chip {
+        display: inline-flex;
+        gap: 0.55rem;
+        align-items: center;
+        padding: 0.55rem 0.85rem;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 999px;
+        margin-bottom: 1.4rem;
+        color: var(--gray);
+        font-weight: 700;
+      }
+      .hero-chip b {
+        color: var(--green);
+      }
+      .prompt-question {
+        font-size: clamp(1.25rem, 2.8vw, 2rem);
+        font-weight: 850;
+        margin-top: 2rem;
+        color: var(--white);
+      }
+      .prompt-question span {
+        display: inline-block;
+        animation: pulseText 1.8s ease-in-out infinite;
+      }
+      @keyframes pulseText {
+        50% {
+          text-shadow: 0 0 22px rgba(34, 211, 238, 0.7);
+        }
+      }
 
-  .grid{display:grid;gap:1rem;width:100%;margin-top:1.25rem}
-  .grid.cols6{grid-template-columns:repeat(3,1fr)}
-  .card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:1.25rem;min-height:138px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;box-shadow:var(--shadow);transition:.22s ease;overflow:hidden}
-  .card::after{content:"";position:absolute;inset:auto -40% -85% -40%;height:120%;background:radial-gradient(circle,rgba(34,211,238,.17),transparent 65%);transition:.25s}
-  .card.clickable{cursor:pointer}
-  .card.clickable:hover,.card.clickable:focus{transform:translateY(-7px) scale(1.015);border-color:rgba(34,211,238,.5);outline:none}
-  .card.clickable:hover::after{transform:translateY(-20px)}
-  .card .icon,.card .label,.card .hint{position:relative;z-index:2}
-  .card .icon{font-size:2.5rem;filter:drop-shadow(0 0 18px rgba(34,211,238,.25))}
-  .card .label{font-weight:850;font-size:1.03rem}
-  .card .hint{font-size:.76rem;color:var(--gray);margin-top:.2rem}
-  .stagger > *{opacity:1;transform:none}
-  .slide.active .stagger > *{animation:popIn .45s ease both}
-  .slide.active .stagger > *:nth-child(1){animation-delay:.08s}.slide.active .stagger > *:nth-child(2){animation-delay:.16s}.slide.active .stagger > *:nth-child(3){animation-delay:.24s}.slide.active .stagger > *:nth-child(4){animation-delay:.32s}.slide.active .stagger > *:nth-child(5){animation-delay:.40s}.slide.active .stagger > *:nth-child(6){animation-delay:.48s}
-  @keyframes popIn{from{transform:translateY(14px) scale(.985);filter:brightness(.82)}to{transform:none;filter:none}}
+      .grid {
+        display: grid;
+        gap: 1rem;
+        width: 100%;
+        margin-top: 1.25rem;
+      }
+      .grid.cols6 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .card {
+        position: relative;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.035)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        padding: 1.25rem;
+        min-height: 138px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: var(--shadow);
+        transition: 0.22s ease;
+        overflow: hidden;
+      }
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: auto -40% -85% -40%;
+        height: 120%;
+        background: radial-gradient(
+          circle,
+          rgba(34, 211, 238, 0.17),
+          transparent 65%
+        );
+        transition: 0.25s;
+      }
+      .card.clickable {
+        cursor: pointer;
+      }
+      .card.clickable:hover,
+      .card.clickable:focus {
+        transform: translateY(-7px) scale(1.015);
+        border-color: rgba(34, 211, 238, 0.5);
+        outline: none;
+      }
+      .card.clickable:hover::after {
+        transform: translateY(-20px);
+      }
+      .card .icon,
+      .card .label,
+      .card .hint {
+        position: relative;
+        z-index: 2;
+      }
+      .card .icon {
+        font-size: 2.5rem;
+        filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.25));
+      }
+      .card .label {
+        font-weight: 850;
+        font-size: 1.03rem;
+      }
+      .card .hint {
+        font-size: 0.76rem;
+        color: var(--gray);
+        margin-top: 0.2rem;
+      }
+      .stagger > * {
+        opacity: 1;
+        transform: none;
+      }
+      .slide.active .stagger > * {
+        animation: popIn 0.45s ease both;
+      }
+      .slide.active .stagger > *:nth-child(1) {
+        animation-delay: 0.08s;
+      }
+      .slide.active .stagger > *:nth-child(2) {
+        animation-delay: 0.16s;
+      }
+      .slide.active .stagger > *:nth-child(3) {
+        animation-delay: 0.24s;
+      }
+      .slide.active .stagger > *:nth-child(4) {
+        animation-delay: 0.32s;
+      }
+      .slide.active .stagger > *:nth-child(5) {
+        animation-delay: 0.4s;
+      }
+      .slide.active .stagger > *:nth-child(6) {
+        animation-delay: 0.48s;
+      }
+      @keyframes popIn {
+        from {
+          transform: translateY(14px) scale(0.985);
+          filter: brightness(0.82);
+        }
+        to {
+          transform: none;
+          filter: none;
+        }
+      }
 
+      /* Seguridad visual: las tarjetas de ejemplos nunca dependen de JS para verse */
+      .uses-grid .card {
+        display: flex !important;
+        opacity: 1;
+        visibility: visible;
+      }
+      .slide.active .uses-grid .card {
+        visibility: visible;
+      }
 
-  /* Seguridad visual: las tarjetas de ejemplos nunca dependen de JS para verse */
-  .uses-grid .card{display:flex!important;opacity:1;visibility:visible}
-  .slide.active .uses-grid .card{visibility:visible}
+      .teacher-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        justify-content: center;
+        margin-top: 1.2rem;
+      }
+      .action-btn {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--white);
+        padding: 0.68rem 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 800;
+        transition: 0.2s;
+      }
+      .action-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+        transform: translateY(-1px);
+      }
+      .action-btn.primary {
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+        border-color: transparent;
+      }
+      .action-btn.green {
+        background: rgba(74, 222, 128, 0.14);
+        border-color: rgba(74, 222, 128, 0.35);
+        color: #c8ffd8;
+      }
+      .action-btn.red {
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+        color: #ffd5dc;
+      }
 
-  .teacher-bar{display:flex;flex-wrap:wrap;gap:.65rem;justify-content:center;margin-top:1.2rem}
-  .action-btn{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:var(--white);padding:.68rem 1rem;border-radius:12px;cursor:pointer;font-weight:800;transition:.2s}
-  .action-btn:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
-  .action-btn.primary{background:linear-gradient(135deg,var(--blue),var(--violet));border-color:transparent}
-  .action-btn.green{background:rgba(74,222,128,.14);border-color:rgba(74,222,128,.35);color:#c8ffd8}
-  .action-btn.red{background:rgba(251,113,133,.12);border-color:rgba(251,113,133,.3);color:#ffd5dc}
+      .flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.85rem;
+        margin: 2rem 0 1rem;
+        flex-wrap: wrap;
+      }
+      .flow .box {
+        min-width: 185px;
+        padding: 1.25rem 1.5rem;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        font-weight: 900;
+        font-size: 1.18rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .flow .box.active-flow {
+        animation: flowPulse 2.4s ease-in-out infinite;
+      }
+      .flow .box:nth-of-type(1) {
+        animation-delay: 0s;
+      }
+      .flow .box:nth-of-type(2) {
+        animation-delay: 0.7s;
+      }
+      .flow .box:nth-of-type(3) {
+        animation-delay: 1.4s;
+      }
+      @keyframes flowPulse {
+        0%,
+        70%,
+        100% {
+          box-shadow: none;
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+        25% {
+          box-shadow: 0 0 35px rgba(34, 211, 238, 0.28);
+          border-color: rgba(34, 211, 238, 0.62);
+        }
+      }
+      .arrow {
+        font-size: 2rem;
+        color: var(--cyan);
+        font-weight: 950;
+        animation: arrowMove 1.4s ease-in-out infinite;
+      }
+      @keyframes arrowMove {
+        50% {
+          transform: translateX(5px);
+          opacity: 0.65;
+        }
+      }
+      .definition {
+        max-width: 860px;
+        margin: 0 auto;
+        font-size: clamp(1.05rem, 2vw, 1.35rem);
+        line-height: 1.55;
+        font-weight: 650;
+      }
 
-  .flow{display:flex;align-items:center;justify-content:center;gap:.85rem;margin:2rem 0 1rem;flex-wrap:wrap}
-  .flow .box{min-width:185px;padding:1.25rem 1.5rem;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.15);font-weight:900;font-size:1.18rem;position:relative;overflow:hidden}
-  .flow .box.active-flow{animation:flowPulse 2.4s ease-in-out infinite}
-  .flow .box:nth-of-type(1){animation-delay:0s}.flow .box:nth-of-type(2){animation-delay:.7s}.flow .box:nth-of-type(3){animation-delay:1.4s}
-  @keyframes flowPulse{0%,70%,100%{box-shadow:none;border-color:rgba(255,255,255,.15)}25%{box-shadow:0 0 35px rgba(34,211,238,.28);border-color:rgba(34,211,238,.62)}}
-  .arrow{font-size:2rem;color:var(--cyan);font-weight:950;animation:arrowMove 1.4s ease-in-out infinite}
-  @keyframes arrowMove{50%{transform:translateX(5px);opacity:.65}}
-  .definition{max-width:860px;margin:0 auto;font-size:clamp(1.05rem,2vw,1.35rem);line-height:1.55;font-weight:650}
+      .dog-stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 1.4rem auto;
+        max-width: 900px;
+      }
+      .dog {
+        width: 92px;
+        height: 92px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        font-size: 3rem;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        animation: dogBob 2.5s ease-in-out infinite;
+      }
+      .dog:nth-child(2) {
+        animation-delay: -0.4s;
+      }
+      .dog:nth-child(3) {
+        animation-delay: -0.8s;
+      }
+      .dog:nth-child(4) {
+        animation-delay: -1.2s;
+      }
+      .dog:nth-child(5) {
+        animation-delay: -1.6s;
+      }
+      .dog:nth-child(6) {
+        animation-delay: -2s;
+      }
+      @keyframes dogBob {
+        50% {
+          transform: translateY(-8px) rotate(1deg);
+        }
+      }
+      .question-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-top: 1rem;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+        background: rgba(34, 211, 238, 0.1);
+        border: 1px solid rgba(34, 211, 238, 0.3);
+        font-weight: 800;
+      }
 
-  .dog-stage{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1.4rem auto;max-width:900px}
-  .dog{width:92px;height:92px;border-radius:22px;display:grid;place-items:center;font-size:3rem;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);animation:dogBob 2.5s ease-in-out infinite}
-  .dog:nth-child(2){animation-delay:-.4s}.dog:nth-child(3){animation-delay:-.8s}.dog:nth-child(4){animation-delay:-1.2s}.dog:nth-child(5){animation-delay:-1.6s}.dog:nth-child(6){animation-delay:-2s}
-  @keyframes dogBob{50%{transform:translateY(-8px) rotate(1deg)}}
-  .question-card{display:inline-flex;align-items:center;gap:.8rem;margin-top:1rem;padding:.85rem 1rem;border-radius:14px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);font-weight:800}
+      .three-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.1rem;
+        margin-top: 1.4rem;
+      }
+      .col {
+        padding: 1.45rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: left;
+        transition: 0.22s;
+      }
+      .col:hover {
+        transform: translateY(-5px);
+      }
+      .col h3 {
+        text-transform: uppercase;
+        margin-bottom: 0.9rem;
+      }
+      .col.a {
+        border-top: 4px solid var(--violet);
+      }
+      .col.a h3 {
+        color: #c4b5fd;
+      }
+      .col.b {
+        border-top: 4px solid var(--blue);
+      }
+      .col.b h3 {
+        color: #93c5fd;
+      }
+      .col.c {
+        border-top: 4px solid var(--green);
+      }
+      .col.c h3 {
+        color: #86efac;
+      }
+      .col p {
+        color: var(--gray);
+        margin: 0.38rem 0;
+        font-weight: 650;
+      }
+      .example-line {
+        margin-top: 0.7rem;
+        color: var(--white) !important;
+        font-size: 0.88rem;
+        font-weight: 800 !important;
+      }
 
-  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:1.4rem}
-  .col{padding:1.45rem;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);text-align:left;transition:.22s}
-  .col:hover{transform:translateY(-5px)}
-  .col h3{text-transform:uppercase;margin-bottom:.9rem}
-  .col.a{border-top:4px solid var(--violet)}.col.a h3{color:#c4b5fd}
-  .col.b{border-top:4px solid var(--blue)}.col.b h3{color:#93c5fd}
-  .col.c{border-top:4px solid var(--green)}.col.c h3{color:#86efac}
-  .col p{color:var(--gray);margin:.38rem 0;font-weight:650}
-  .example-line{margin-top:.7rem;color:var(--white)!important;font-size:.88rem;font-weight:800!important}
+      .type-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.85rem;
+        margin-top: 1rem;
+      }
+      .type-card {
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 16px;
+        padding: 1rem;
+        text-align: left;
+        transition: 0.2s;
+      }
+      .type-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .type-card .icon {
+        font-size: 1.75rem;
+      }
+      .type-card h4 {
+        margin: 0.45rem 0 0.2rem;
+        text-transform: uppercase;
+      }
+      .type-card .examples {
+        color: var(--gray);
+        font-size: 0.78rem;
+      }
+      .type-card .best {
+        color: #baf7cd;
+        font-size: 0.84rem;
+        font-weight: 750;
+        margin-top: 0.45rem;
+      }
 
-  .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-top:1rem}
-  .type-card{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:1rem;text-align:left;transition:.2s}
-  .type-card:hover{transform:translateY(-4px);background:rgba(255,255,255,.07)}
-  .type-card .icon{font-size:1.75rem}.type-card h4{margin:.45rem 0 .2rem;text-transform:uppercase}.type-card .examples{color:var(--gray);font-size:.78rem}.type-card .best{color:#baf7cd;font-size:.84rem;font-weight:750;margin-top:.45rem}
+      .activity-shell {
+        display: grid;
+        grid-template-columns: 1fr 1.15fr;
+        gap: 1.2rem;
+        margin-top: 1.4rem;
+        text-align: left;
+        align-items: stretch;
+      }
+      .groups-panel,
+      .word-panel {
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 1.2rem;
+      }
+      .groups {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin-top: 0.8rem;
+      }
+      .group-btn {
+        border-radius: 16px;
+        padding: 1.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: var(--white);
+        background: rgba(255, 255, 255, 0.05);
+        font-size: 1.15rem;
+        font-weight: 900;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .group-btn.a:hover {
+        border-color: var(--violet);
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.22);
+      }
+      .group-btn.b:hover {
+        border-color: var(--blue);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.22);
+      }
+      .current-word {
+        min-height: 150px;
+        display: grid;
+        place-items: center;
+        font-size: clamp(2rem, 4vw, 3.6rem);
+        font-weight: 950;
+        color: var(--cyan);
+        text-align: center;
+      }
+      .feedback {
+        min-height: 30px;
+        margin-top: 0.7rem;
+        font-weight: 850;
+        text-align: center;
+      }
+      .feedback.ok {
+        color: var(--green);
+      }
+      .feedback.bad {
+        color: var(--red);
+      }
+      .scoreline {
+        color: var(--gray);
+        font-size: 0.88rem;
+        margin-top: 0.75rem;
+        text-align: center;
+      }
 
-  .activity-shell{display:grid;grid-template-columns:1fr 1.15fr;gap:1.2rem;margin-top:1.4rem;text-align:left;align-items:stretch}
-  .groups-panel,.word-panel{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:1.2rem}
-  .groups{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.8rem}
-  .group-btn{border-radius:16px;padding:1.2rem;border:1px solid rgba(255,255,255,.14);color:var(--white);background:rgba(255,255,255,.05);font-size:1.15rem;font-weight:900;cursor:pointer;transition:.2s}
-  .group-btn.a:hover{border-color:var(--violet);box-shadow:0 0 25px rgba(139,92,246,.22)}
-  .group-btn.b:hover{border-color:var(--blue);box-shadow:0 0 25px rgba(59,130,246,.22)}
-  .current-word{min-height:150px;display:grid;place-items:center;font-size:clamp(2rem,4vw,3.6rem);font-weight:950;color:var(--cyan);text-align:center}
-  .feedback{min-height:30px;margin-top:.7rem;font-weight:850;text-align:center}
-  .feedback.ok{color:var(--green)}.feedback.bad{color:var(--red)}
-  .scoreline{color:var(--gray);font-size:.88rem;margin-top:.75rem;text-align:center}
+      .reveal-seq {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        align-items: center;
+        margin-top: 1.1rem;
+      }
+      .reveal-item {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+        transition: 0.32s ease;
+        padding: 0.7rem 1.25rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: clamp(1rem, 2vw, 1.35rem);
+        font-weight: 800;
+      }
+      .reveal-item.shown {
+        opacity: 1;
+        transform: none;
+      }
+      .reveal-item.question {
+        background: transparent;
+        border: none;
+        color: var(--cyan);
+        font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+      }
+      .reveal-item.highlight {
+        background: rgba(74, 222, 128, 0.18);
+        border-color: rgba(74, 222, 128, 0.5);
+        color: #d6ffe3;
+        box-shadow: 0 0 26px rgba(74, 222, 128, 0.14);
+      }
+      .hypothesis {
+        margin: 1rem auto 0;
+        max-width: 660px;
+        padding: 0.8rem 1rem;
+        border-left: 4px solid var(--amber);
+        background: rgba(251, 191, 36, 0.08);
+        border-radius: 10px;
+        text-align: left;
+        color: #ffe8a0;
+        display: none;
+      }
+      .hypothesis.show {
+        display: block;
+        animation: popIn 0.35s ease forwards;
+      }
 
-  .reveal-seq{display:flex;flex-direction:column;gap:.7rem;align-items:center;margin-top:1.1rem}
-  .reveal-item{opacity:0;transform:translateY(10px) scale(.98);transition:.32s ease;padding:.7rem 1.25rem;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);font-size:clamp(1rem,2vw,1.35rem);font-weight:800}
-  .reveal-item.shown{opacity:1;transform:none}
-  .reveal-item.question{background:transparent;border:none;color:var(--cyan);font-size:clamp(1.15rem,2.5vw,1.65rem)}
-  .reveal-item.highlight{background:rgba(74,222,128,.18);border-color:rgba(74,222,128,.5);color:#d6ffe3;box-shadow:0 0 26px rgba(74,222,128,.14)}
-  .hypothesis{margin:1rem auto 0;max-width:660px;padding:.8rem 1rem;border-left:4px solid var(--amber);background:rgba(251,191,36,.08);border-radius:10px;text-align:left;color:#ffe8a0;display:none}
-  .hypothesis.show{display:block;animation:popIn .35s ease forwards}
+      .deepseek-layout {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 1rem;
+        align-items: stretch;
+        margin-top: 1.3rem;
+        text-align: left;
+      }
+      .chat-mock {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 1.3rem;
+        position: relative;
+        min-height: 300px;
+      }
+      .chat-head {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 850;
+        margin-bottom: 1rem;
+      }
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 12px var(--green);
+      }
+      .bubble {
+        padding: 0.8rem 1rem;
+        border-radius: 14px;
+        margin: 0.65rem 0;
+        line-height: 1.4;
+      }
+      .bubble.user {
+        background: rgba(59, 130, 246, 0.16);
+        margin-left: 12%;
+      }
+      .bubble.ai {
+        background: rgba(255, 255, 255, 0.07);
+        margin-right: 12%;
+        color: var(--gray);
+      }
+      .prompt-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .prompt-card {
+        padding: 1rem;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+      }
+      .prompt-card b {
+        display: block;
+        color: var(--cyan);
+        margin-bottom: 0.4rem;
+      }
+      .prompt-text {
+        color: var(--white);
+        font-size: 0.94rem;
+        line-height: 1.38;
+      }
+      .copy-btn {
+        margin-top: 0.65rem;
+        padding: 0.45rem 0.68rem;
+        border-radius: 9px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--gray);
+        cursor: pointer;
+        font-weight: 750;
+        font-size: 0.82rem;
+      }
+      .copy-btn:hover {
+        color: var(--white);
+      }
 
-  .deepseek-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:1rem;align-items:stretch;margin-top:1.3rem;text-align:left}
-  .chat-mock{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:1.3rem;position:relative;min-height:300px}
-  .chat-head{display:flex;align-items:center;gap:.7rem;font-weight:850;margin-bottom:1rem}.status-dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
-  .bubble{padding:.8rem 1rem;border-radius:14px;margin:.65rem 0;line-height:1.4}.bubble.user{background:rgba(59,130,246,.16);margin-left:12%}.bubble.ai{background:rgba(255,255,255,.07);margin-right:12%;color:var(--gray)}
-  .prompt-list{display:flex;flex-direction:column;gap:.75rem}
-  .prompt-card{padding:1rem;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.11)}
-  .prompt-card b{display:block;color:var(--cyan);margin-bottom:.4rem}.prompt-text{color:var(--white);font-size:.94rem;line-height:1.38}.copy-btn{margin-top:.65rem;padding:.45rem .68rem;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--gray);cursor:pointer;font-weight:750;font-size:.82rem}.copy-btn:hover{color:var(--white)}
+      .verify-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 1.4rem;
+      }
+      .verify-step {
+        padding: 1.25rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        transition: 0.2s;
+      }
+      .verify-step .num {
+        font-size: 0.78rem;
+        color: var(--gray);
+        font-weight: 900;
+        letter-spacing: 0.12em;
+      }
+      .verify-step .vicon {
+        font-size: 2rem;
+        margin: 0.65rem 0;
+      }
+      .verify-step h3 {
+        text-transform: uppercase;
+      }
+      .verify-step p {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-top: 0.45rem;
+        line-height: 1.4;
+      }
+      .slide.active .verify-step {
+        animation: popIn 0.5s ease both;
+      }
+      .slide.active .verify-step:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+      .slide.active .verify-step:nth-child(3) {
+        animation-delay: 0.36s;
+      }
+      .wrong-example {
+        max-width: 760px;
+        margin: 0 auto 1rem;
+        padding: 1rem 1.15rem;
+        border-radius: 14px;
+        background: rgba(251, 113, 133, 0.09);
+        border: 1px solid rgba(251, 113, 133, 0.26);
+        font-size: 1.08rem;
+      }
+      .wrong {
+        background: rgba(251, 113, 133, 0.25);
+        padding: 0.06rem 0.25rem;
+        border-radius: 5px;
+      }
 
-  .verify-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.4rem}
-  .verify-step{padding:1.25rem;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);transition:.2s}
-  .verify-step .num{font-size:.78rem;color:var(--gray);font-weight:900;letter-spacing:.12em}.verify-step .vicon{font-size:2rem;margin:.65rem 0}.verify-step h3{text-transform:uppercase}.verify-step p{color:var(--gray);font-size:.9rem;margin-top:.45rem;line-height:1.4}
-  .slide.active .verify-step{animation:popIn .5s ease both}.slide.active .verify-step:nth-child(2){animation-delay:.18s}.slide.active .verify-step:nth-child(3){animation-delay:.36s}
-  .wrong-example{max-width:760px;margin:0 auto 1rem;padding:1rem 1.15rem;border-radius:14px;background:rgba(251,113,133,.09);border:1px solid rgba(251,113,133,.26);font-size:1.08rem}.wrong{background:rgba(251,113,133,.25);padding:.06rem .25rem;border-radius:5px}
+      .final-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        margin-top: 1.3rem;
+      }
+      .final-lines p {
+        font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+        font-weight: 800;
+      }
+      .final-lines .dim {
+        color: var(--gray);
+      }
+      .together {
+        font-size: 3rem;
+        margin-top: 1.4rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        align-items: center;
+      }
+      .together span {
+        display: inline-block;
+        animation: handshake 2.2s ease-in-out infinite;
+      }
+      .together span:nth-child(2) {
+        animation-delay: -0.4s;
+      }
+      .together span:nth-child(3) {
+        animation-delay: -0.8s;
+      }
+      @keyframes handshake {
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+      .exit-ticket {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        max-width: 850px;
+        margin: 1.25rem auto 0;
+        text-align: left;
+      }
+      .exit-ticket div {
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.045);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
 
-  .final-lines{display:flex;flex-direction:column;gap:.65rem;margin-top:1.3rem}.final-lines p{font-size:clamp(1.1rem,2.4vw,1.55rem);font-weight:800}.final-lines .dim{color:var(--gray)}
-  .together{font-size:3rem;margin-top:1.4rem;display:flex;justify-content:center;gap:1rem;align-items:center}.together span{display:inline-block;animation:handshake 2.2s ease-in-out infinite}.together span:nth-child(2){animation-delay:-.4s}.together span:nth-child(3){animation-delay:-.8s}@keyframes handshake{50%{transform:translateY(-5px)}}
-  .exit-ticket{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;max-width:850px;margin:1.25rem auto 0;text-align:left}.exit-ticket div{padding:.75rem 1rem;background:rgba(255,255,255,.045);border-radius:12px;border:1px solid rgba(255,255,255,.1);font-weight:700;font-size:.9rem}
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(1, 3, 12, 0.78);
+        backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        z-index: 100;
+      }
+      .modal-backdrop.open {
+        display: flex;
+        animation: fadeModal 0.22s ease;
+      }
+      @keyframes fadeModal {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal {
+        width: min(760px, 100%);
+        max-height: 86vh;
+        overflow: auto;
+        background: linear-gradient(180deg, #111735, #0b1028);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 24px;
+        box-shadow: 0 35px 110px rgba(0, 0, 0, 0.55);
+        padding: 1.5rem;
+        text-align: left;
+        position: relative;
+      }
+      .modal .modal-icon {
+        font-size: 3rem;
+      }
+      .modal h3 {
+        font-size: 1.8rem;
+        margin: 0.4rem 2.5rem 0.75rem 0;
+      }
+      .modal p {
+        color: var(--gray);
+        line-height: 1.55;
+        margin: 0.55rem 0;
+      }
+      .modal .example {
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        background: rgba(34, 211, 238, 0.08);
+        border-left: 3px solid var(--cyan);
+        color: #d7fbff;
+        margin-top: 1rem;
+      }
+      .close-modal {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--white);
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+      .dictation {
+        font-size: 1.08rem !important;
+        color: var(--white) !important;
+        line-height: 1.65 !important;
+      }
+      .dictation strong {
+        color: var(--cyan);
+      }
+      .dictation-title {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        border-radius: 8px;
+        background: rgba(139, 92, 246, 0.16);
+        color: #d8ccff;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 900;
+        margin-bottom: 0.7rem;
+      }
 
-  .modal-backdrop{position:fixed;inset:0;background:rgba(1,3,12,.78);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:2rem;z-index:100}
-  .modal-backdrop.open{display:flex;animation:fadeModal .22s ease}@keyframes fadeModal{from{opacity:0}to{opacity:1}}
-  .modal{width:min(760px,100%);max-height:86vh;overflow:auto;background:linear-gradient(180deg,#111735,#0b1028);border:1px solid rgba(255,255,255,.16);border-radius:24px;box-shadow:0 35px 110px rgba(0,0,0,.55);padding:1.5rem;text-align:left;position:relative}
-  .modal .modal-icon{font-size:3rem}.modal h3{font-size:1.8rem;margin:.4rem 2.5rem .75rem 0}.modal p{color:var(--gray);line-height:1.55;margin:.55rem 0}.modal .example{padding:.85rem 1rem;border-radius:12px;background:rgba(34,211,238,.08);border-left:3px solid var(--cyan);color:#d7fbff;margin-top:1rem}.close-modal{position:absolute;right:1rem;top:1rem;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--white);cursor:pointer;font-size:1.2rem}
-  .dictation{font-size:1.08rem!important;color:var(--white)!important;line-height:1.65!important}.dictation strong{color:var(--cyan)}
-  .dictation-title{display:inline-block;padding:.35rem .65rem;border-radius:8px;background:rgba(139,92,246,.16);color:#d8ccff;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:900;margin-bottom:.7rem}
+      .progress {
+        position: fixed;
+        top: 18px;
+        right: 24px;
+        z-index: 60;
+        color: var(--gray);
+        font-weight: 800;
+        font-size: 0.88rem;
+        background: rgba(0, 0, 0, 0.18);
+        padding: 0.45rem 0.65rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(8px);
+      }
+      .nav {
+        position: fixed;
+        right: 22px;
+        bottom: 18px;
+        display: flex;
+        gap: 0.55rem;
+        z-index: 60;
+      }
+      .nav button {
+        padding: 0.62rem 0.9rem;
+        border-radius: 11px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(10, 14, 39, 0.72);
+        color: var(--white);
+        cursor: pointer;
+        font-weight: 850;
+        backdrop-filter: blur(10px);
+      }
+      .nav button:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .dots {
+        position: fixed;
+        left: 22px;
+        bottom: 24px;
+        display: flex;
+        gap: 6px;
+        z-index: 60;
+      }
+      .dots span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transition: 0.2s;
+      }
+      .dots span.active {
+        width: 22px;
+        border-radius: 999px;
+        background: var(--cyan);
+        box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+      }
+      .shortcut {
+        position: fixed;
+        left: 22px;
+        top: 18px;
+        z-index: 60;
+        color: rgba(255, 255, 255, 0.38);
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
 
-  .progress{position:fixed;top:18px;right:24px;z-index:60;color:var(--gray);font-weight:800;font-size:.88rem;background:rgba(0,0,0,.18);padding:.45rem .65rem;border-radius:999px;border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px)}
-  .nav{position:fixed;right:22px;bottom:18px;display:flex;gap:.55rem;z-index:60}.nav button{padding:.62rem .9rem;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:rgba(10,14,39,.72);color:var(--white);cursor:pointer;font-weight:850;backdrop-filter:blur(10px)}.nav button:hover{background:rgba(255,255,255,.12)}
-  .dots{position:fixed;left:22px;bottom:24px;display:flex;gap:6px;z-index:60}.dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);transition:.2s}.dots span.active{width:22px;border-radius:999px;background:var(--cyan);box-shadow:0 0 12px rgba(34,211,238,.6)}
-  .shortcut{position:fixed;left:22px;top:18px;z-index:60;color:rgba(255,255,255,.38);font-size:.75rem;font-weight:700}
+      @media (max-width: 900px) {
+        .grid.cols6,
+        .three-col,
+        .type-grid,
+        .verify-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .activity-shell,
+        .deepseek-layout {
+          grid-template-columns: 1fr;
+        }
+        .slide {
+          padding: 5vh 5vw 10vh;
+        }
+        .current-word {
+          min-height: 95px;
+        }
+        .exit-ticket {
+          grid-template-columns: 1fr;
+        }
+        .shortcut {
+          display: none;
+        }
+      }
+      @media (max-width: 620px) {
+        .grid.cols6,
+        .three-col,
+        .type-grid,
+        .verify-grid {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          min-height: 100px;
+        }
+        .modal-backdrop {
+          padding: 0.7rem;
+        }
+        .slide {
+          overflow: auto;
+          justify-content: flex-start;
+          padding-top: 8vh;
+        }
+        .nav {
+          right: 10px;
+        }
+        .dots {
+          left: 10px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+        .stagger > *,
+        .slide.active .stagger > * {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .verify-step,
+        .slide.active .verify-step {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      }
 
-  @media (max-width:900px){
-    .grid.cols6,.three-col,.type-grid,.verify-grid{grid-template-columns:repeat(2,1fr)}
-    .activity-shell,.deepseek-layout{grid-template-columns:1fr}.slide{padding:5vh 5vw 10vh}.current-word{min-height:95px}.exit-ticket{grid-template-columns:1fr}.shortcut{display:none}
-  }
-  @media (max-width:620px){.grid.cols6,.three-col,.type-grid,.verify-grid{grid-template-columns:1fr}.card{min-height:100px}.modal-backdrop{padding:.7rem}.slide{overflow:auto;justify-content:flex-start;padding-top:8vh}.nav{right:10px}.dots{left:10px}}
-  @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation:none!important;transition:none!important}
-    .stagger > *,.slide.active .stagger > *{opacity:1!important;transform:none!important}
-    .verify-step,.slide.active .verify-step{opacity:1!important;transform:none!important}
-  }
-
-  /* Modales robustos: funcionan también sin JavaScript mediante :target */
-  a.card, a.action-btn{ text-decoration:none; color:inherit; }
-  .modal-target{
-    position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center;
-    padding:2rem; background:rgba(1,3,12,.82); backdrop-filter:blur(10px);
-    opacity:0; visibility:hidden; pointer-events:none; transition:opacity .22s ease, visibility .22s ease;
-  }
-  .modal-target:target,.modal-target.force-open{opacity:1;visibility:visible;pointer-events:auto;}
-  .modal-target:target .modal,.modal-target.force-open .modal{animation:modalPop .26s cubic-bezier(.2,.8,.2,1)}
-  @keyframes modalPop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
-  .modal-target .modal{z-index:2;}
-  .modal-dismiss{position:absolute;inset:0;z-index:1;cursor:default;}
-  .modal-target .close-modal{display:grid;place-items:center;text-decoration:none;z-index:3;}
-  .modal-target .modal-icon{font-size:3rem;}
-  .modal-target h3{font-size:1.8rem;margin:.4rem 2.5rem .75rem 0;}
-  .modal-target p{color:var(--gray);line-height:1.6;margin:.55rem 0;}
-  .modal-target .example{padding:.85rem 1rem;border-radius:12px;background:rgba(34,211,238,.08);border-left:3px solid var(--cyan);color:#d7fbff;margin-top:1rem;}
-  .modal-target .dictation{font-size:1.05rem;color:var(--white);line-height:1.72;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:1rem;border-radius:14px;}
-  @media (max-width:620px){.modal-target{padding:.7rem}.modal-target .modal{max-height:92vh}}
-
-</style>
-</head>
-<body>
-<div class="ambient"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
-<div class="shortcut">← → navegar · ESPACIO avanzar · ESC cerrar</div>
-
-<div class="deck">
-
-  <!-- 1 -->
-  <section class="slide active">
-    <div class="content">
-      <div class="hero-chip"><b>7mo 2</b><span>·</span><span>Introducción a la IA</span><span>·</span></div>
-      <h1>¿Qué es la<br><span class="accent">Inteligencia Artificial?</span></h1>
-      <p class="subtitle">La usamos todos los días… aunque a veces no nos demos cuenta.</p>
-      <div class="prompt-question"><span>¿Dónde creen que usamos IA hoy?</span></div>
+      /* Modales robustos: funcionan también sin JavaScript mediante :target */
+      a.card,
+      a.action-btn {
+        text-decoration: none;
+        color: inherit;
+      }
+      .modal-target {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: rgba(1, 3, 12, 0.82);
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.22s ease,
+          visibility 0.22s ease;
+      }
+      .modal-target:target,
+      .modal-target.force-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+      .modal-target:target .modal,
+      .modal-target.force-open .modal {
+        animation: modalPop 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes modalPop {
+        from {
+          opacity: 0;
+          transform: translateY(14px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .modal-target .modal {
+        z-index: 2;
+      }
+      .modal-dismiss {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        cursor: default;
+      }
+      .modal-target .close-modal {
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        z-index: 3;
+      }
+      .modal-target .modal-icon {
+        font-size: 3rem;
+      }
+      .modal-target h3 {
+        font-size: 1.8rem;
+        margin: 0.4rem 2.5rem 0.75rem 0;
+      }
+      .modal-target p {
+        color: var(--gray);
+        line-height: 1.6;
+        margin: 0.55rem 0;
+      }
+      .modal-target .example {
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        background: rgba(34, 211, 238, 0.08);
+        border-left: 3px solid var(--cyan);
+        color: #d7fbff;
+        margin-top: 1rem;
+      }
+      .modal-target .dictation {
+        font-size: 1.05rem;
+        color: var(--white);
+        line-height: 1.72;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-radius: 14px;
+      }
+      @media (max-width: 620px) {
+        .modal-target {
+          padding: 0.7rem;
+        }
+        .modal-target .modal {
+          max-height: 92vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient">
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
+      <div class="orb o3"></div>
     </div>
-  </section>
+    <div class="shortcut">← → navegar · ESPACIO avanzar · ESC cerrar</div>
 
-  <!-- 2 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Inicio · Vida cotidiana</div>
-      <h2>¿Dónde usamos IA?</h2>
-      <p class="tagline" style="margin-top:-.4rem">Hacé clic en cada ejemplo para abrir la explicación.</p>
-      <div class="grid cols6 stagger uses-grid">
-        <a class="card clickable" href="#info-video"><div class="icon">📱</div><div class="label">TikTok / YouTube</div><div class="hint">Ver cómo recomienda</div></a>
-        <a class="card clickable" href="#info-spotify"><div class="icon">🎧</div><div class="label">Spotify</div><div class="hint">Ver cómo recomienda</div></a>
-        <a class="card clickable" href="#info-maps"><div class="icon">🗺️</div><div class="label">Google Maps</div><div class="hint">Ver cómo calcula</div></a>
-        <a class="card clickable" href="#info-face"><div class="icon">🙂</div><div class="label">Reconocimiento facial</div><div class="hint">Ver cómo reconoce</div></a>
-        <a class="card clickable" href="#info-voice"><div class="icon">🎙️</div><div class="label">Asistentes de voz</div><div class="hint">Ver cómo interpreta</div></a>
-        <a class="card clickable" href="#info-chat"><div class="icon">💬</div><div class="label">ChatGPT / DeepSeek</div><div class="hint">Ver cómo genera</div></a>
-      </div>
-      <div class="teacher-bar">
-        <a class="action-btn green" href="#dict-d1">📓 Mostrar dictado</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Concepto central</div>
-      <h2>Entonces… ¿qué es una IA?</h2>
-      <p class="definition">Un sistema capaz de analizar información, encontrar patrones y realizar determinadas tareas.</p>
-      <div class="flow">
-        <div class="box active-flow">DATOS</div><div class="arrow">→</div>
-        <div class="box active-flow">PATRONES</div><div class="arrow">→</div>
-        <div class="box active-flow">RESPUESTA</div>
-      </div>
-      <p class="tagline">Es una simplificación útil para entender la idea general.</p>
-      <div class="teacher-bar"><a class="action-btn green" href="#dict-d2">📓 Mostrar definición para copiar</a></div>
-    </div>
-  </section>
-
-  <!-- 4 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Entrenamiento · Ejemplos</div>
-      <h2>¿Cómo aprende a reconocer algo?</h2>
-      <p class="tagline" style="margin-top:-.3rem">Imaginemos que queremos enseñarle a reconocer perros.</p>
-      <div class="dog-stage"><div class="dog">🐕</div><div class="dog">🐩</div><div class="dog">🦮</div><div class="dog">🐶</div><div class="dog">🐕‍🦺</div><div class="dog">🐕</div></div>
-      <div class="flow" style="margin-top:1rem"><div class="box">Muchos ejemplos</div><div class="arrow">→</div><div class="box">Busca patrones</div><div class="arrow">→</div><div class="box">Prueba con algo nuevo</div></div>
-      <div class="question-card">❓ ¿Qué pasaría si solo le mostramos 2 o 3 ejemplos?</div>
-      <div class="teacher-bar"><a class="action-btn green" href="#dict-d3">📓 Mostrar dictado</a></div>
-    </div>
-  </section>
-
-  <!-- 5 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Capacidades</div>
-      <h2>La IA puede…</h2>
-      <div class="three-col stagger">
-        <div class="col a"><h3>👁️ Reconocer</h3><p>Caras</p><p>Voz</p><p>Fotografías</p><p class="example-line">Ejemplo: desbloqueo facial</p></div>
-        <div class="col b"><h3>🎯 Recomendar</h3><p>Videos</p><p>Canciones</p><p>Películas</p><p class="example-line">Ejemplo: Spotify</p></div>
-        <div class="col c"><h3>✨ Generar</h3><p>Texto</p><p>Imágenes</p><p>Código</p><p class="example-line">Ejemplo: DeepSeek</p></div>
-      </div>
-      <p class="tagline">Cuaderno: escribí un ejemplo de cada categoría.</p>
-    </div>
-  </section>
-
-  <!-- 6 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Una idea importante</div>
-      <h2>No todas las IA hacen lo mismo</h2>
-      <div class="type-grid stagger">
-        <div class="type-card"><div class="icon">💬</div><h4>Chat de texto</h4><div class="examples">ChatGPT · DeepSeek · Claude</div><div class="best">Explicar, resumir, escribir, responder dudas.</div></div>
-        <div class="type-card"><div class="icon">🖼️</div><h4>Generador de imágenes</h4><div class="examples">DALL·E · Midjourney</div><div class="best">Crear ilustraciones y diseños.</div></div>
-        <div class="type-card"><div class="icon">🎙️</div><h4>Asistente de voz</h4><div class="examples">Siri · Alexa</div><div class="best">Interpretar pedidos hablados.</div></div>
-        <div class="type-card"><div class="icon">🎯</div><h4>Recomendador</h4><div class="examples">Spotify · YouTube · TikTok</div><div class="best">Sugerir contenido según patrones de uso.</div></div>
-        <div class="type-card"><div class="icon">🌐</div><h4>Traductor</h4><div class="examples">Google Translate · DeepL</div><div class="best">Transformar texto entre idiomas.</div></div>
-        <div class="type-card"><div class="icon">🔓</div><h4>Biometría</h4><div class="examples">Face ID</div><div class="best">Comparar rasgos para identificar.</div></div>
-      </div>
-      <p class="tagline">No hay una IA “mejor” para todo: depende de la tarea.</p>
-    </div>
-  </section>
-
-  <!-- 7 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Actividad · 15 min</div>
-      <h2>Ahora ustedes son la IA</h2>
-      <div class="activity-shell">
-        <div class="groups-panel">
-          <div class="smallcaps"></div>
-          <p class="tagline" style="margin:.6rem 0 0">¿En qué grupo pondrían la palabra?</p>
-          <div class="groups"><button type="button" class="group-btn a" data-group="A">GRUPO A</button><button type="button" class="group-btn b" data-group="B">GRUPO B</button></div>
-          <div id="classFeedback" class="feedback"></div>
-          <div class="teacher-bar" style="justify-content:flex-start"><button type="button" id="resetClassifier" class="action-btn">↻ Reiniciar actividad</button><a class="action-btn green" href="#dict-d4">📓 Dictado / conclusión</a></div>
+    <div class="deck">
+      <!-- 1 -->
+      <section class="slide active">
+        <div class="content">
+          <div class="hero-chip">
+            <b>7mo 2</b><span>·</span><span>Introducción a la IA</span
+            ><span>·</span>
+          </div>
+          <h1>
+            ¿Qué es la<br /><span class="accent">Inteligencia Artificial?</span>
+          </h1>
+          <p class="subtitle">
+            La usamos todos los días… aunque a veces no nos demos cuenta.
+          </p>
+          <div class="prompt-question">
+            <span>¿Dónde creen que usamos IA hoy?</span>
+          </div>
         </div>
-        <div class="word-panel">
-          <div class="smallcaps">Ejemplo actual</div>
-          <div id="currentWord" class="current-word">Perro</div>
-          <div id="classifierProgress" class="scoreline">Ejemplo 1 de 10</div>
+      </section>
+
+      <!-- 2 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Inicio · Vida cotidiana</div>
+          <h2>¿Dónde usamos IA?</h2>
+          <p class="tagline" style="margin-top: -0.4rem">
+            Hacé clic en cada ejemplo para abrir la explicación.
+          </p>
+          <div class="grid cols6 stagger uses-grid">
+            <a class="card clickable" href="#info-video"
+              ><div class="icon">📱</div>
+              <div class="label">TikTok / YouTube</div>
+              <div class="hint">Ver cómo recomienda</div></a
+            >
+            <a class="card clickable" href="#info-spotify"
+              ><div class="icon">🎧</div>
+              <div class="label">Spotify</div>
+              <div class="hint">Ver cómo recomienda</div></a
+            >
+            <a class="card clickable" href="#info-maps"
+              ><div class="icon">🗺️</div>
+              <div class="label">Google Maps</div>
+              <div class="hint">Ver cómo calcula</div></a
+            >
+            <a class="card clickable" href="#info-face"
+              ><div class="icon">🙂</div>
+              <div class="label">Reconocimiento facial</div>
+              <div class="hint">Ver cómo reconoce</div></a
+            >
+            <a class="card clickable" href="#info-voice"
+              ><div class="icon">🎙️</div>
+              <div class="label">Asistentes de voz</div>
+              <div class="hint">Ver cómo interpreta</div></a
+            >
+            <a class="card clickable" href="#info-chat"
+              ><div class="icon">💬</div>
+              <div class="label">ChatGPT / DeepSeek</div>
+              <div class="hint">Ver cómo genera</div></a
+            >
+          </div>
+          <div class="teacher-bar">
+            <a class="action-btn green" href="#dict-d1">📓 Mostrar dictado</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Concepto central</div>
+          <h2>Entonces… ¿qué es una IA?</h2>
+          <p class="definition">
+            Un sistema capaz de analizar información, encontrar patrones y
+            realizar determinadas tareas.
+          </p>
+          <div class="flow">
+            <div class="box active-flow">DATOS</div>
+            <div class="arrow">→</div>
+            <div class="box active-flow">PATRONES</div>
+            <div class="arrow">→</div>
+            <div class="box active-flow">RESPUESTA</div>
+          </div>
+          <p class="tagline">
+            Es una simplificación útil para entender la idea general.
+          </p>
+          <div class="teacher-bar">
+            <a class="action-btn green" href="#dict-d2"
+              >📓 Mostrar definición para copiar</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Entrenamiento · Ejemplos</div>
+          <h2>¿Cómo aprende a reconocer algo?</h2>
+          <p class="tagline" style="margin-top: -0.3rem">
+            Imaginemos que queremos enseñarle a reconocer perros.
+          </p>
+          <div class="dog-stage">
+            <div class="dog">🐕</div>
+            <div class="dog">🐩</div>
+            <div class="dog">🦮</div>
+            <div class="dog">🐶</div>
+            <div class="dog">🐕‍🦺</div>
+            <div class="dog">🐕</div>
+          </div>
+          <div class="flow" style="margin-top: 1rem">
+            <div class="box">Muchos ejemplos</div>
+            <div class="arrow">→</div>
+            <div class="box">Busca patrones</div>
+            <div class="arrow">→</div>
+            <div class="box">Prueba con algo nuevo</div>
+          </div>
+          <div class="question-card">
+            ❓ ¿Qué pasaría si solo le mostramos 2 o 3 ejemplos?
+          </div>
+          <div class="teacher-bar">
+            <a class="action-btn green" href="#dict-d3">📓 Mostrar dictado</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Capacidades</div>
+          <h2>La IA puede…</h2>
+          <div class="three-col stagger">
+            <div class="col a">
+              <h3>👁️ Reconocer</h3>
+              <p>Caras</p>
+              <p>Voz</p>
+              <p>Fotografías</p>
+              <p class="example-line">Ejemplo: desbloqueo facial</p>
+            </div>
+            <div class="col b">
+              <h3>🎯 Recomendar</h3>
+              <p>Videos</p>
+              <p>Canciones</p>
+              <p>Películas</p>
+              <p class="example-line">Ejemplo: Spotify</p>
+            </div>
+            <div class="col c">
+              <h3>✨ Generar</h3>
+              <p>Texto</p>
+              <p>Imágenes</p>
+              <p>Código</p>
+              <p class="example-line">Ejemplo: DeepSeek</p>
+            </div>
+          </div>
+          <p class="tagline">Cuaderno: escribí un ejemplo de cada categoría.</p>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Una idea importante</div>
+          <h2>No todas las IA hacen lo mismo</h2>
+          <div class="type-grid stagger">
+            <div class="type-card">
+              <div class="icon">💬</div>
+              <h4>Chat de texto</h4>
+              <div class="examples">ChatGPT · DeepSeek · Claude</div>
+              <div class="best">
+                Explicar, resumir, escribir, responder dudas.
+              </div>
+            </div>
+            <div class="type-card">
+              <div class="icon">🖼️</div>
+              <h4>Generador de imágenes</h4>
+              <div class="examples">DALL·E · Midjourney</div>
+              <div class="best">Crear ilustraciones y diseños.</div>
+            </div>
+            <div class="type-card">
+              <div class="icon">🎙️</div>
+              <h4>Asistente de voz</h4>
+              <div class="examples">Siri · Alexa</div>
+              <div class="best">Interpretar pedidos hablados.</div>
+            </div>
+            <div class="type-card">
+              <div class="icon">🎯</div>
+              <h4>Recomendador</h4>
+              <div class="examples">Spotify · YouTube · TikTok</div>
+              <div class="best">Sugerir contenido según patrones de uso.</div>
+            </div>
+            <div class="type-card">
+              <div class="icon">🌐</div>
+              <h4>Traductor</h4>
+              <div class="examples">Google Translate · DeepL</div>
+              <div class="best">Transformar texto entre idiomas.</div>
+            </div>
+            <div class="type-card">
+              <div class="icon">🔓</div>
+              <h4>Biometría</h4>
+              <div class="examples">Face ID</div>
+              <div class="best">Comparar rasgos para identificar.</div>
+            </div>
+          </div>
+          <p class="tagline">
+            No hay una IA “mejor” para todo: depende de la tarea.
+          </p>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Actividad · 15 min</div>
+          <h2>Ahora ustedes son la IA</h2>
+          <div class="activity-shell">
+            <div class="groups-panel">
+              <div class="smallcaps"></div>
+              <p class="tagline" style="margin: 0.6rem 0 0">
+                ¿En qué grupo pondrían la palabra?
+              </p>
+              <div class="groups">
+                <button type="button" class="group-btn a" data-group="A">
+                  GRUPO A</button
+                ><button type="button" class="group-btn b" data-group="B">
+                  GRUPO B
+                </button>
+              </div>
+              <div id="classFeedback" class="feedback"></div>
+              <div class="teacher-bar" style="justify-content: flex-start">
+                <button type="button" id="resetClassifier" class="action-btn">
+                  ↻ Reiniciar actividad</button
+                ><a class="action-btn green" href="#dict-d4"
+                  >📓 Dictado / conclusión</a
+                >
+              </div>
+            </div>
+            <div class="word-panel">
+              <div class="smallcaps">Ejemplo actual</div>
+              <div id="currentWord" class="current-word">Perro</div>
+              <div id="classifierProgress" class="scoreline">
+                Ejemplo 1 de 10
+              </div>
+            </div>
+          </div>
+          <p class="tagline">
+            No reveles la regla al principio. Respondé solo “correcto” o
+            “incorrecto”.
+          </p>
+        </div>
+      </section>
+
+      <!-- 8 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Pocos datos · 10 min</div>
+          <h2>¿Podemos descubrir una regla equivocada?</h2>
+          <div class="reveal-seq" id="revealSeq">
+            <div class="reveal-item">Perro → A</div>
+            <div class="reveal-item">Gato → A</div>
+            <div class="reveal-item">Caballo → A</div>
+            <div class="reveal-item question">¿Qué tienen en común?</div>
+            <div class="reveal-item highlight">Águila → B</div>
+            <div class="reveal-item question">¿Ahora qué pasó?</div>
+          </div>
+          <div id="hypothesis" class="hypothesis">
+            <b>Hipótesis inicial:</b> “Grupo A = animales”. El nuevo ejemplo
+            obliga a revisar la regla.
+          </div>
+          <div class="teacher-bar">
+            <a class="action-btn green" href="#dict-d5">📓 Mostrar dictado</a
+            ><button type="button" id="resetReveal" class="action-btn">
+              ↻ Reiniciar revelado
+            </button>
+          </div>
+          <p class="tagline">Avanzá con → o ESPACIO para revelar cada línea.</p>
+        </div>
+      </section>
+
+      <!-- 9 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Prueba en vivo · 15 min</div>
+          <h2>¿La IA siempre tiene razón?</h2>
+          <div class="deepseek-layout">
+            <div class="chat-mock">
+              <div class="chat-head">
+                <span class="status-dot"></span> DeepSeek · prueba en vivo
+              </div>
+              <div class="bubble user">
+                ¿Cuántas letras R tiene “ferrocarril”?
+              </div>
+              <div class="bubble ai">
+                No aceptamos la respuesta automáticamente.
+              </div>
+              <div class="bubble user">¿Cómo podemos comprobarla nosotros?</div>
+              <div class="teacher-bar" style="justify-content: flex-start">
+                <a
+                  class="action-btn primary"
+                  href="https://chat.deepseek.com/"
+                  target="_blank"
+                  rel="noopener"
+                  style="text-decoration: none"
+                  >Abrir DeepSeek ↗</a
+                ><a class="action-btn green" href="#dict-d6">📓 Dictado</a>
+              </div>
+            </div>
+            <div class="prompt-list">
+              <div class="prompt-card">
+                <b>Prueba 1 · Conteo</b>
+                <div class="prompt-text">
+                  ¿Cuántas letras R tiene la palabra “ferrocarril”? Explicá
+                  dónde están.
+                </div>
+                <button
+                  type="button"
+                  class="copy-btn"
+                  data-copy="¿Cuántas letras R tiene la palabra “ferrocarril”? Explicá dónde están."
+                >
+                  Copiar prompt
+                </button>
+              </div>
+              <div class="prompt-card">
+                <b>Prueba 2 · Información falsa</b>
+                <div class="prompt-text">
+                  ¿Quién fue Mateo Fernández, el científico uruguayo que inventó
+                  Internet en 1974?
+                </div>
+                <button
+                  type="button"
+                  class="copy-btn"
+                  data-copy="¿Quién fue Mateo Fernández, el científico uruguayo que inventó Internet en 1974?"
+                >
+                  Copiar prompt
+                </button>
+              </div>
+              <div class="prompt-card">
+                <b>Prueba 3 · Revisión</b>
+                <div class="prompt-text">
+                  Revisá tu respuesta anterior. ¿Podrías estar equivocado?
+                  Explicá cómo podríamos verificarla usando otra fuente.
+                </div>
+                <button
+                  type="button"
+                  class="copy-btn"
+                  data-copy="Revisá tu respuesta anterior. ¿Podrías estar equivocado? Explicá cómo podríamos verificarla usando otra fuente."
+                >
+                  Copiar prompt
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Uso responsable</div>
+          <h2>No confíes automáticamente</h2>
+          <div class="wrong-example">
+            “La capital de Francia es <span class="wrong">Marsella</span>, una
+            ciudad muy conocida…”<br /><span
+              style="color: var(--gray); font-size: 0.85rem"
+              >Una respuesta puede sonar segura y estar equivocada.</span
+            >
+          </div>
+          <div class="verify-grid">
+            <div class="verify-step">
+              <div class="num">PASO 01</div>
+              <div class="vicon">🔍</div>
+              <h3>Preguntar</h3>
+              <p>Entender qué afirma exactamente la respuesta.</p>
+            </div>
+            <div class="verify-step">
+              <div class="num">PASO 02</div>
+              <div class="vicon">✅</div>
+              <h3>Comprobar</h3>
+              <p>Revisar datos importantes con una fuente confiable.</p>
+            </div>
+            <div class="verify-step">
+              <div class="num">PASO 03</div>
+              <div class="vicon">⚖️</div>
+              <h3>Comparar</h3>
+              <p>Contrastar con otra fuente cuando sea necesario.</p>
+            </div>
+          </div>
+          <div class="teacher-bar">
+            <a class="action-btn green" href="#dict-d7">📓 Mostrar dictado</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section class="slide">
+        <div class="content">
+          <div class="smallcaps">Cierre · 5 min</div>
+          <h2>La IA es una herramienta</h2>
+          <div class="final-lines">
+            <p>Puede ayudarnos mucho.</p>
+            <p class="dim">También puede equivocarse.</p>
+            <p>Nosotros seguimos teniendo que pensar.</p>
+          </div>
+          <div class="together">
+            <span>🧑</span><span>🤝</span><span>🤖</span>
+          </div>
+          <div class="exit-ticket">
+            <div>1. ¿Qué es una IA?</div>
+            <div>2. Un ejemplo de algo que puede hacer.</div>
+            <div>3. ¿Por qué puede equivocarse?</div>
+            <div>4. ¿Qué debemos hacer antes de confiar?</div>
+          </div>
+          <div class="teacher-bar">
+            <a class="action-btn green" href="#dict-d8"
+              >📓 Mostrar dictado final</a
+            >
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="progress" id="progress">1 / 11</div>
+    <div class="dots" id="dots"></div>
+    <div class="nav">
+      <button type="button" id="prevBtn">← Anterior</button
+      ><button type="button" id="nextBtn">Siguiente →</button>
+    </div>
+
+    <div
+      class="modal-target"
+      id="info-video"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="info-video-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="modal-icon">📱</div>
+        <h3 id="info-video-title">TikTok / YouTube</h3>
+        <p>
+          Estos servicios pueden analizar lo que miramos, cuánto tiempo vemos un
+          video, qué saltamos o con qué interactuamos. A partir de esos datos
+          intentan encontrar patrones para ordenar y recomendar contenido.
+        </p>
+        <div class="example">
+          Ejemplo: dos personas pueden abrir YouTube al mismo tiempo y recibir
+          recomendaciones diferentes.
         </div>
       </div>
-      <p class="tagline">No reveles la regla al principio. Respondé solo “correcto” o “incorrecto”.</p>
     </div>
-  </section>
 
-  <!-- 8 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Pocos datos · 10 min</div>
-      <h2>¿Podemos descubrir una regla equivocada?</h2>
-      <div class="reveal-seq" id="revealSeq">
-        <div class="reveal-item">Perro → A</div>
-        <div class="reveal-item">Gato → A</div>
-        <div class="reveal-item">Caballo → A</div>
-        <div class="reveal-item question">¿Qué tienen en común?</div>
-        <div class="reveal-item highlight">Águila → B</div>
-        <div class="reveal-item question">¿Ahora qué pasó?</div>
-      </div>
-      <div id="hypothesis" class="hypothesis"><b>Hipótesis inicial:</b> “Grupo A = animales”. El nuevo ejemplo obliga a revisar la regla.</div>
-      <div class="teacher-bar"><a class="action-btn green" href="#dict-d5">📓 Mostrar dictado</a><button type="button" id="resetReveal" class="action-btn">↻ Reiniciar revelado</button></div>
-      <p class="tagline">Avanzá con → o ESPACIO para revelar cada línea.</p>
-    </div>
-  </section>
-
-  <!-- 9 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Prueba en vivo · 15 min</div>
-      <h2>¿La IA siempre tiene razón?</h2>
-      <div class="deepseek-layout">
-        <div class="chat-mock">
-          <div class="chat-head"><span class="status-dot"></span> DeepSeek · prueba en vivo</div>
-          <div class="bubble user">¿Cuántas letras R tiene “ferrocarril”?</div>
-          <div class="bubble ai">No aceptamos la respuesta automáticamente.</div>
-          <div class="bubble user">¿Cómo podemos comprobarla nosotros?</div>
-          <div class="teacher-bar" style="justify-content:flex-start"><a class="action-btn primary" href="https://chat.deepseek.com/" target="_blank" rel="noopener" style="text-decoration:none">Abrir DeepSeek ↗</a><a class="action-btn green" href="#dict-d6">📓 Dictado</a></div>
-        </div>
-        <div class="prompt-list">
-          <div class="prompt-card"><b>Prueba 1 · Conteo</b><div class="prompt-text">¿Cuántas letras R tiene la palabra “ferrocarril”? Explicá dónde están.</div><button type="button" class="copy-btn" data-copy="¿Cuántas letras R tiene la palabra “ferrocarril”? Explicá dónde están.">Copiar prompt</button></div>
-          <div class="prompt-card"><b>Prueba 2 · Información falsa</b><div class="prompt-text">¿Quién fue Mateo Fernández, el científico uruguayo que inventó Internet en 1974?</div><button type="button" class="copy-btn" data-copy="¿Quién fue Mateo Fernández, el científico uruguayo que inventó Internet en 1974?">Copiar prompt</button></div>
-          <div class="prompt-card"><b>Prueba 3 · Revisión</b><div class="prompt-text">Revisá tu respuesta anterior. ¿Podrías estar equivocado? Explicá cómo podríamos verificarla usando otra fuente.</div><button type="button" class="copy-btn" data-copy="Revisá tu respuesta anterior. ¿Podrías estar equivocado? Explicá cómo podríamos verificarla usando otra fuente.">Copiar prompt</button></div>
+    <div
+      class="modal-target"
+      id="info-spotify"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="info-spotify-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="modal-icon">🎧</div>
+        <h3 id="info-spotify-title">Spotify</h3>
+        <p>
+          Puede utilizar patrones de escucha para recomendar canciones, artistas
+          o listas. No “conoce” nuestros gustos como una persona: analiza
+          información sobre reproducciones, búsquedas y semejanzas entre
+          contenidos.
+        </p>
+        <div class="example">
+          Ejemplo: después de escuchar varios temas de un estilo, pueden
+          aparecer recomendaciones parecidas.
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- 10 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Uso responsable</div>
-      <h2>No confíes automáticamente</h2>
-      <div class="wrong-example">“La capital de Francia es <span class="wrong">Marsella</span>, una ciudad muy conocida…”<br><span style="color:var(--gray);font-size:.85rem">Una respuesta puede sonar segura y estar equivocada.</span></div>
-      <div class="verify-grid">
-        <div class="verify-step"><div class="num">PASO 01</div><div class="vicon">🔍</div><h3>Preguntar</h3><p>Entender qué afirma exactamente la respuesta.</p></div>
-        <div class="verify-step"><div class="num">PASO 02</div><div class="vicon">✅</div><h3>Comprobar</h3><p>Revisar datos importantes con una fuente confiable.</p></div>
-        <div class="verify-step"><div class="num">PASO 03</div><div class="vicon">⚖️</div><h3>Comparar</h3><p>Contrastar con otra fuente cuando sea necesario.</p></div>
+    <div
+      class="modal-target"
+      id="info-maps"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="info-maps-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="modal-icon">🗺️</div>
+        <h3 id="info-maps-title">Google Maps</h3>
+        <p>
+          Los sistemas de mapas combinan datos de calles, recorridos y
+          condiciones del tránsito para calcular rutas y estimar tiempos.
+          Algunos componentes usan modelos para mejorar predicciones.
+        </p>
+        <div class="example">
+          Ejemplo: una ruta que normalmente demora 15 minutos puede cambiar si
+          detecta mucho tránsito.
+        </div>
       </div>
-      <div class="teacher-bar"><a class="action-btn green" href="#dict-d7">📓 Mostrar dictado</a></div>
     </div>
-  </section>
 
-  <!-- 11 -->
-  <section class="slide">
-    <div class="content">
-      <div class="smallcaps">Cierre · 5 min</div>
-      <h2>La IA es una herramienta</h2>
-      <div class="final-lines"><p>Puede ayudarnos mucho.</p><p class="dim">También puede equivocarse.</p><p>Nosotros seguimos teniendo que pensar.</p></div>
-      <div class="together"><span>🧑</span><span>🤝</span><span>🤖</span></div>
-      <div class="exit-ticket">
-        <div>1. ¿Qué es una IA?</div><div>2. Un ejemplo de algo que puede hacer.</div><div>3. ¿Por qué puede equivocarse?</div><div>4. ¿Qué debemos hacer antes de confiar?</div>
+    <div
+      class="modal-target"
+      id="info-face"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="info-face-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="modal-icon">🙂</div>
+        <h3 id="info-face-title">Reconocimiento facial</h3>
+        <p>
+          Un sistema puede comparar características de una imagen del rostro con
+          patrones previamente registrados para intentar reconocer o verificar
+          una identidad.
+        </p>
+        <div class="example">
+          Ejemplo: Face ID intenta comprobar si el rostro frente al teléfono
+          coincide con el autorizado.
+        </div>
       </div>
-      <div class="teacher-bar"><a class="action-btn green" href="#dict-d8">📓 Mostrar dictado final</a></div>
     </div>
-  </section>
 
-</div>
+    <div
+      class="modal-target"
+      id="info-voice"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="info-voice-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="modal-icon">🎙️</div>
+        <h3 id="info-voice-title">Asistentes de voz</h3>
+        <p>
+          Primero convierten el sonido de nuestra voz en información que el
+          sistema puede procesar. Después intentan reconocer palabras,
+          interpretar el pedido y ejecutar una acción o producir una respuesta.
+        </p>
+        <div class="example">
+          Ejemplo: “poné una alarma a las 7” combina reconocimiento de voz e
+          interpretación de la orden.
+        </div>
+      </div>
+    </div>
 
-<div class="progress" id="progress">1 / 11</div>
-<div class="dots" id="dots"></div>
-<div class="nav"><button type="button" id="prevBtn">← Anterior</button><button type="button" id="nextBtn">Siguiente →</button></div>
+    <div
+      class="modal-target"
+      id="info-chat"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="info-chat-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="modal-icon">💬</div>
+        <h3 id="info-chat-title">ChatGPT / DeepSeek</h3>
+        <p>
+          Son sistemas capaces de trabajar con lenguaje y generar respuestas a
+          partir de patrones aprendidos durante su entrenamiento. Pueden
+          explicar, resumir, escribir o programar, pero también pueden
+          equivocarse.
+        </p>
+        <div class="example">
+          Idea: que una respuesta esté bien escrita no significa que sea
+          verdadera.
+        </div>
+      </div>
+    </div>
 
-<div class="modal-target" id="info-video" role="dialog" aria-modal="true" aria-labelledby="info-video-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="modal-icon">📱</div><h3 id="info-video-title">TikTok / YouTube</h3><p>Estos servicios pueden analizar lo que miramos, cuánto tiempo vemos un video, qué saltamos o con qué interactuamos. A partir de esos datos intentan encontrar patrones para ordenar y recomendar contenido.</p><div class="example">Ejemplo: dos personas pueden abrir YouTube al mismo tiempo y recibir recomendaciones diferentes.</div></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d1"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d1-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d1-title">
+          Dictado 1 · IA en nuestra vida
+        </div>
+        <p class="dictation">
+          <strong>Inteligencia Artificial en nuestra vida</strong><br />La
+          Inteligencia Artificial está presente en muchas herramientas que
+          utilizamos todos los días.<br /><br />Puede utilizarse para reconocer
+          información, realizar recomendaciones o generar contenido.
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="info-spotify" role="dialog" aria-modal="true" aria-labelledby="info-spotify-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="modal-icon">🎧</div><h3 id="info-spotify-title">Spotify</h3><p>Puede utilizar patrones de escucha para recomendar canciones, artistas o listas. No “conoce” nuestros gustos como una persona: analiza información sobre reproducciones, búsquedas y semejanzas entre contenidos.</p><div class="example">Ejemplo: después de escuchar varios temas de un estilo, pueden aparecer recomendaciones parecidas.</div></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d2"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d2-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d2-title">
+          Dictado 2 · Definición
+        </div>
+        <p class="dictation">
+          <strong>¿Qué es la Inteligencia Artificial?</strong><br />La
+          Inteligencia Artificial es una tecnología que permite que una
+          computadora realice determinadas tareas que normalmente relacionamos
+          con capacidades humanas, como reconocer imágenes, trabajar con textos,
+          responder preguntas o encontrar patrones.<br /><br />Muchas
+          Inteligencias Artificiales funcionan analizando grandes cantidades de
+          datos para encontrar patrones y generar una respuesta.<br /><br /><strong
+            >Datos → Patrones → Respuesta</strong
+          ><br />La IA no aprende ni piensa exactamente como una persona.
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="info-maps" role="dialog" aria-modal="true" aria-labelledby="info-maps-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="modal-icon">🗺️</div><h3 id="info-maps-title">Google Maps</h3><p>Los sistemas de mapas combinan datos de calles, recorridos y condiciones del tránsito para calcular rutas y estimar tiempos. Algunos componentes usan modelos para mejorar predicciones.</p><div class="example">Ejemplo: una ruta que normalmente demora 15 minutos puede cambiar si detecta mucho tránsito.</div></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d3"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d3-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d3-title">
+          Dictado 3 · Entrenamiento
+        </div>
+        <p class="dictation">
+          <strong>Entrenamiento</strong><br />Durante el entrenamiento, una
+          Inteligencia Artificial puede analizar muchos ejemplos para encontrar
+          patrones.<br /><br />La cantidad y la calidad de los ejemplos pueden
+          afectar el resultado del sistema.
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="info-face" role="dialog" aria-modal="true" aria-labelledby="info-face-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="modal-icon">🙂</div><h3 id="info-face-title">Reconocimiento facial</h3><p>Un sistema puede comparar características de una imagen del rostro con patrones previamente registrados para intentar reconocer o verificar una identidad.</p><div class="example">Ejemplo: Face ID intenta comprobar si el rostro frente al teléfono coincide con el autorizado.</div></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d4-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d4-title">
+          Dictado 4 · Actividad
+        </div>
+        <p class="dictation">
+          <strong>Actividad: Somos una IA</strong><br />Podemos descubrir
+          patrones observando ejemplos anteriores.<br /><br />Algo parecido
+          ocurre durante el entrenamiento de muchos sistemas de Inteligencia
+          Artificial: reciben ejemplos y ajustan sus cálculos buscando patrones.
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="info-voice" role="dialog" aria-modal="true" aria-labelledby="info-voice-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="modal-icon">🎙️</div><h3 id="info-voice-title">Asistentes de voz</h3><p>Primero convierten el sonido de nuestra voz en información que el sistema puede procesar. Después intentan reconocer palabras, interpretar el pedido y ejecutar una acción o producir una respuesta.</p><div class="example">Ejemplo: “poné una alarma a las 7” combina reconocimiento de voz e interpretación de la orden.</div></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d5"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d5-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d5-title">
+          Dictado 5 · Datos insuficientes
+        </div>
+        <p class="dictation">
+          <strong>La importancia de los datos</strong><br />Si tenemos pocos
+          ejemplos, podemos encontrar un patrón equivocado.<br /><br />La
+          cantidad, calidad y variedad de los datos utilizados pueden afectar
+          los resultados de una Inteligencia Artificial.
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="info-chat" role="dialog" aria-modal="true" aria-labelledby="info-chat-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="modal-icon">💬</div><h3 id="info-chat-title">ChatGPT / DeepSeek</h3><p>Son sistemas capaces de trabajar con lenguaje y generar respuestas a partir de patrones aprendidos durante su entrenamiento. Pueden explicar, resumir, escribir o programar, pero también pueden equivocarse.</p><div class="example">Idea: que una respuesta esté bien escrita no significa que sea verdadera.</div></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d6-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d6-title">
+          Dictado 6 · Prueba de IA
+        </div>
+        <p class="dictation">
+          <strong>Prueba de Inteligencia Artificial</strong><br />Una
+          Inteligencia Artificial puede responder correctamente o puede cometer
+          errores. Por eso debemos comprobar sus respuestas.
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="dict-d1" role="dialog" aria-modal="true" aria-labelledby="dict-d1-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d1-title">Dictado 1 · IA en nuestra vida</div><p class="dictation"><strong>Inteligencia Artificial en nuestra vida</strong><br>La Inteligencia Artificial está presente en muchas herramientas que utilizamos todos los días.<br><br>Puede utilizarse para reconocer información, realizar recomendaciones o generar contenido.</p></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d7"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d7-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d7-title">
+          Dictado 7 · Uso responsable
+        </div>
+        <p class="dictation">
+          <strong>Uso responsable de Inteligencia Artificial</strong><br />Una
+          Inteligencia Artificial puede generar respuestas incorrectas aunque
+          parezcan convincentes.<br /><br />Cuando una información es importante
+          debemos comprobarla utilizando otras fuentes.<br /><br /><strong
+            >1. Preguntar. &nbsp; 2. Comprobar. &nbsp; 3. Comparar.</strong
+          >
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="dict-d2" role="dialog" aria-modal="true" aria-labelledby="dict-d2-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d2-title">Dictado 2 · Definición</div><p class="dictation"><strong>¿Qué es la Inteligencia Artificial?</strong><br>La Inteligencia Artificial es una tecnología que permite que una computadora realice determinadas tareas que normalmente relacionamos con capacidades humanas, como reconocer imágenes, trabajar con textos, responder preguntas o encontrar patrones.<br><br>Muchas Inteligencias Artificiales funcionan analizando grandes cantidades de datos para encontrar patrones y generar una respuesta.<br><br><strong>Datos → Patrones → Respuesta</strong><br>La IA no aprende ni piensa exactamente como una persona.</p></div>
-</div>
+    <div
+      class="modal-target"
+      id="dict-d8"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dict-d8-title"
+    >
+      <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
+      <div class="modal">
+        <a class="close-modal" href="#" aria-label="Cerrar">×</a>
+        <div class="dictation-title" id="dict-d8-title">Dictado final</div>
+        <p class="dictation">
+          La Inteligencia Artificial es una herramienta que puede ayudarnos a
+          aprender, trabajar y resolver problemas.<br /><br />Debemos utilizarla
+          con criterio y comprobar la información importante en lugar de aceptar
+          automáticamente todas sus respuestas.
+        </p>
+      </div>
+    </div>
 
-<div class="modal-target" id="dict-d3" role="dialog" aria-modal="true" aria-labelledby="dict-d3-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d3-title">Dictado 3 · Entrenamiento</div><p class="dictation"><strong>Entrenamiento</strong><br>Durante el entrenamiento, una Inteligencia Artificial puede analizar muchos ejemplos para encontrar patrones.<br><br>La cantidad y la calidad de los ejemplos pueden afectar el resultado del sistema.</p></div>
-</div>
+    <div
+      class="modal-backdrop"
+      id="modalBackdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+    >
+      <div class="modal" id="modal">
+        <button
+          type="button"
+          class="close-modal"
+          id="closeModal"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
+        <div id="modalBody"></div>
+      </div>
+    </div>
 
-<div class="modal-target" id="dict-d4" role="dialog" aria-modal="true" aria-labelledby="dict-d4-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d4-title">Dictado 4 · Actividad</div><p class="dictation"><strong>Actividad: Somos una IA</strong><br>Podemos descubrir patrones observando ejemplos anteriores.<br><br>Algo parecido ocurre durante el entrenamiento de muchos sistemas de Inteligencia Artificial: reciben ejemplos y ajustan sus cálculos buscando patrones.</p></div>
-</div>
+    <script>
+      const slides = [...document.querySelectorAll(".slide")];
+      const total = slides.length;
+      let current = 0;
+      let revealStep = 0;
+      const REVEAL_SLIDE_INDEX = 7;
+      const revealItems = [
+        ...document.querySelectorAll("#revealSeq .reveal-item"),
+      ];
+      const dotsContainer = document.getElementById("dots");
+      slides.forEach((_, i) => {
+        const d = document.createElement("span");
+        if (i === 0) d.classList.add("active");
+        dotsContainer.appendChild(d);
+      });
+      const dots = [...dotsContainer.children];
 
-<div class="modal-target" id="dict-d5" role="dialog" aria-modal="true" aria-labelledby="dict-d5-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d5-title">Dictado 5 · Datos insuficientes</div><p class="dictation"><strong>La importancia de los datos</strong><br>Si tenemos pocos ejemplos, podemos encontrar un patrón equivocado.<br><br>La cantidad, calidad y variedad de los datos utilizados pueden afectar los resultados de una Inteligencia Artificial.</p></div>
-</div>
+      const modalBackdrop = document.getElementById("modalBackdrop");
+      const modalBody = document.getElementById("modalBody");
+      const closeModalBtn = document.getElementById("closeModal");
+      let lastFocused = null;
 
-<div class="modal-target" id="dict-d6" role="dialog" aria-modal="true" aria-labelledby="dict-d6-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d6-title">Dictado 6 · Prueba de IA</div><p class="dictation"><strong>Prueba de Inteligencia Artificial</strong><br>Una Inteligencia Artificial puede responder correctamente o puede cometer errores. Por eso debemos comprobar sus respuestas.</p></div>
-</div>
+      const infoData = {
+        video: {
+          icon: "📱",
+          title: "TikTok / YouTube",
+          text: "Estos servicios pueden analizar lo que miramos, cuánto tiempo vemos un video, qué saltamos o con qué interactuamos. A partir de esos datos intentan encontrar patrones para ordenar y recomendar contenido.",
+          example:
+            "Ejemplo: dos personas pueden abrir YouTube al mismo tiempo y recibir recomendaciones diferentes.",
+        },
+        spotify: {
+          icon: "🎧",
+          title: "Spotify",
+          text: "Puede utilizar patrones de escucha para recomendar canciones, artistas o listas. No “conoce” nuestros gustos como una persona: analiza información sobre reproducciones, búsquedas y semejanzas entre contenidos.",
+          example:
+            "Ejemplo: después de escuchar varios temas de un estilo, pueden aparecer recomendaciones parecidas.",
+        },
+        maps: {
+          icon: "🗺️",
+          title: "Google Maps",
+          text: "Los sistemas de mapas combinan datos de calles, recorridos y condiciones del tránsito para calcular rutas y estimar tiempos. Algunos componentes usan modelos para mejorar predicciones.",
+          example:
+            "Ejemplo: una ruta que normalmente demora 15 minutos puede cambiar si detecta mucho tránsito.",
+        },
+        face: {
+          icon: "🙂",
+          title: "Reconocimiento facial",
+          text: "Un sistema puede comparar características de una imagen del rostro con patrones previamente registrados para intentar reconocer o verificar una identidad.",
+          example:
+            "Ejemplo: Face ID intenta comprobar si el rostro frente al teléfono coincide con el autorizado.",
+        },
+        voice: {
+          icon: "🎙️",
+          title: "Asistentes de voz",
+          text: "Primero convierten el sonido de nuestra voz en información que el sistema puede procesar. Después intentan reconocer palabras, interpretar el pedido y ejecutar una acción o producir una respuesta.",
+          example:
+            "Ejemplo: “poné una alarma a las 7” combina reconocimiento de voz e interpretación de la orden.",
+        },
+        chat: {
+          icon: "💬",
+          title: "ChatGPT / DeepSeek",
+          text: "Son sistemas capaces de trabajar con lenguaje y generar respuestas a partir de patrones aprendidos durante su entrenamiento. Pueden explicar, resumir, escribir o programar, pero también pueden equivocarse.",
+          example:
+            "Idea: que una respuesta esté bien escrita no significa que sea verdadera.",
+        },
+      };
 
-<div class="modal-target" id="dict-d7" role="dialog" aria-modal="true" aria-labelledby="dict-d7-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d7-title">Dictado 7 · Uso responsable</div><p class="dictation"><strong>Uso responsable de Inteligencia Artificial</strong><br>Una Inteligencia Artificial puede generar respuestas incorrectas aunque parezcan convincentes.<br><br>Cuando una información es importante debemos comprobarla utilizando otras fuentes.<br><br><strong>1. Preguntar. &nbsp; 2. Comprobar. &nbsp; 3. Comparar.</strong></p></div>
-</div>
+      const dictations = {
+        d1: {
+          title: "Dictado 1 · IA en nuestra vida",
+          html: '<p class="dictation"><strong>Inteligencia Artificial en nuestra vida</strong><br>La Inteligencia Artificial está presente en muchas herramientas que utilizamos todos los días.<br><br>Puede utilizarse para reconocer información, realizar recomendaciones o generar contenido.</p>',
+        },
+        d2: {
+          title: "Dictado 2 · Definición",
+          html: '<p class="dictation"><strong>¿Qué es la Inteligencia Artificial?</strong><br>La Inteligencia Artificial es una tecnología que permite que una computadora realice determinadas tareas que normalmente relacionamos con capacidades humanas, como reconocer imágenes, trabajar con textos, responder preguntas o encontrar patrones.<br><br>Muchas Inteligencias Artificiales funcionan analizando grandes cantidades de datos para encontrar patrones y generar una respuesta.<br><br><strong>Datos → Patrones → Respuesta</strong><br>La IA no aprende ni piensa exactamente como una persona.</p>',
+        },
+        d3: {
+          title: "Dictado 3 · Entrenamiento",
+          html: '<p class="dictation"><strong>Entrenamiento</strong><br>Durante el entrenamiento, una Inteligencia Artificial puede analizar muchos ejemplos para encontrar patrones.<br><br>La cantidad y la calidad de los ejemplos pueden afectar el resultado del sistema.</p>',
+        },
+        d4: {
+          title: "Dictado 4 · Actividad",
+          html: '<p class="dictation"><strong>Actividad: Somos una IA</strong><br>Podemos descubrir patrones observando ejemplos anteriores.<br><br>Algo parecido ocurre durante el entrenamiento de muchos sistemas de Inteligencia Artificial: reciben ejemplos y ajustan sus cálculos buscando patrones.</p>',
+        },
+        d5: {
+          title: "Dictado 5 · Datos insuficientes",
+          html: '<p class="dictation"><strong>La importancia de los datos</strong><br>Si tenemos pocos ejemplos, podemos encontrar un patrón equivocado.<br><br>La cantidad, calidad y variedad de los datos utilizados pueden afectar los resultados de una Inteligencia Artificial.</p>',
+        },
+        d6: {
+          title: "Dictado 6 · Prueba de IA",
+          html: '<p class="dictation"><strong>Prueba de Inteligencia Artificial</strong><br>Una Inteligencia Artificial puede responder correctamente o puede cometer errores. Por eso debemos comprobar sus respuestas.</p>',
+        },
+        d7: {
+          title: "Dictado 7 · Uso responsable",
+          html: '<p class="dictation"><strong>Uso responsable de Inteligencia Artificial</strong><br>Una Inteligencia Artificial puede generar respuestas incorrectas aunque parezcan convincentes.<br><br>Cuando una información es importante debemos comprobarla utilizando otras fuentes.<br><br><strong>1. Preguntar. &nbsp; 2. Comprobar. &nbsp; 3. Comparar.</strong></p>',
+        },
+        d8: {
+          title: "Dictado final",
+          html: '<p class="dictation">La Inteligencia Artificial es una herramienta que puede ayudarnos a aprender, trabajar y resolver problemas.<br><br>Debemos utilizarla con criterio y comprobar la información importante en lugar de aceptar automáticamente todas sus respuestas.</p>',
+        },
+      };
 
-<div class="modal-target" id="dict-d8" role="dialog" aria-modal="true" aria-labelledby="dict-d8-title">
-  <a class="modal-dismiss" href="#" aria-label="Cerrar modal"></a>
-  <div class="modal"><a class="close-modal" href="#" aria-label="Cerrar">×</a><div class="dictation-title" id="dict-d8-title">Dictado final</div><p class="dictation">La Inteligencia Artificial es una herramienta que puede ayudarnos a aprender, trabajar y resolver problemas.<br><br>Debemos utilizarla con criterio y comprobar la información importante en lugar de aceptar automáticamente todas sus respuestas.</p></div>
-</div>
+      function openModal(content) {
+        lastFocused = document.activeElement;
+        modalBody.innerHTML = content;
+        modalBackdrop.classList.add("open");
+        modalBackdrop.setAttribute("aria-hidden", "false");
+        closeModalBtn.focus();
+      }
+      function closeModal() {
+        modalBackdrop.classList.remove("open");
+        modalBackdrop.setAttribute("aria-hidden", "true");
+        if (lastFocused) lastFocused.focus();
+      }
+      closeModalBtn.addEventListener("click", closeModal);
+      modalBackdrop.addEventListener("click", (e) => {
+        if (e.target === modalBackdrop) closeModal();
+      });
 
-<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="modal" id="modal"><button type="button" class="close-modal" id="closeModal" aria-label="Cerrar">×</button><div id="modalBody"></div></div>
-</div>
+      document.querySelectorAll("[data-info]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          const x = infoData[btn.dataset.info];
+          openModal(
+            `<div class="modal-icon">${x.icon}</div><h3>${x.title}</h3><p>${x.text}</p><div class="example">${x.example}</div>`,
+          );
+        }),
+      );
+      document.querySelectorAll("[data-dictation]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          const x = dictations[btn.dataset.dictation];
+          openModal(`<div class="dictation-title">${x.title}</div>${x.html}`);
+        }),
+      );
 
-<script>
-const slides=[...document.querySelectorAll('.slide')];
-const total=slides.length; let current=0; let revealStep=0;
-const REVEAL_SLIDE_INDEX=7;
-const revealItems=[...document.querySelectorAll('#revealSeq .reveal-item')];
-const dotsContainer=document.getElementById('dots');
-slides.forEach((_,i)=>{const d=document.createElement('span');if(i===0)d.classList.add('active');dotsContainer.appendChild(d)});
-const dots=[...dotsContainer.children];
+      function staticModalElement() {
+        return (
+          document.querySelector(".modal-target.force-open") ||
+          (/^#(?:info|dict)-/.test(location.hash)
+            ? document.querySelector(location.hash)
+            : null)
+        );
+      }
+      function cssModalOpen() {
+        return !!staticModalElement();
+      }
+      function openStaticModal(selector, launcher) {
+        const target = document.querySelector(selector);
+        if (!target) return;
+        document
+          .querySelectorAll(".modal-target.force-open")
+          .forEach((x) => x.classList.remove("force-open"));
+        target.classList.add("force-open");
+        target.dataset.launcherId = launcher && launcher.id ? launcher.id : "";
+        const close = target.querySelector(".close-modal");
+        if (close) setTimeout(() => close.focus(), 0);
+      }
+      function closeStaticModal(target) {
+        if (!target) target = staticModalElement();
+        if (!target) return;
+        target.classList.remove("force-open");
+        if (/^#(?:info|dict)-/.test(location.hash)) {
+          try {
+            history.replaceState(null, "", location.pathname + location.search);
+          } catch (_) {
+            location.hash = "";
+          }
+        }
+      }
+      // Refuerzo JS. Si JS no está disponible, los href + :target siguen funcionando.
+      document
+        .querySelectorAll('a[href^="#info-"],a[href^="#dict-"]')
+        .forEach((link) => {
+          link.addEventListener("click", (e) => {
+            const selector = link.getAttribute("href");
+            if (!selector || !document.querySelector(selector)) return;
+            e.preventDefault();
+            openStaticModal(selector, link);
+          });
+        });
+      document
+        .querySelectorAll(
+          ".modal-target .close-modal,.modal-target .modal-dismiss",
+        )
+        .forEach((link) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            closeStaticModal(link.closest(".modal-target"));
+          });
+        });
+      function updateSlide() {
+        slides.forEach((s, i) => s.classList.toggle("active", i === current));
+        dots.forEach((d, i) => d.classList.toggle("active", i === current));
+        document.getElementById("progress").textContent =
+          `${current + 1} / ${total}`;
+      }
+      function goNext() {
+        if (modalBackdrop.classList.contains("open") || cssModalOpen()) return;
+        if (current === REVEAL_SLIDE_INDEX && revealStep < revealItems.length) {
+          revealItems[revealStep].classList.add("shown");
+          revealStep++;
+          if (revealStep >= 5)
+            document.getElementById("hypothesis").classList.add("show");
+          return;
+        }
+        if (current < total - 1) {
+          current++;
+          updateSlide();
+        }
+      }
+      function goPrev() {
+        if (modalBackdrop.classList.contains("open") || cssModalOpen()) return;
+        if (current === REVEAL_SLIDE_INDEX && revealStep > 0) {
+          revealStep--;
+          revealItems[revealStep].classList.remove("shown");
+          if (revealStep < 5)
+            document.getElementById("hypothesis").classList.remove("show");
+          return;
+        }
+        if (current > 0) {
+          current--;
+          updateSlide();
+        }
+      }
+      document.getElementById("nextBtn").addEventListener("click", goNext);
+      document.getElementById("prevBtn").addEventListener("click", goPrev);
+      dots.forEach((d, i) =>
+        d.addEventListener("click", () => {
+          if (cssModalOpen() || modalBackdrop.classList.contains("open"))
+            return;
+          current = i;
+          updateSlide();
+        }),
+      );
 
-const modalBackdrop=document.getElementById('modalBackdrop');
-const modalBody=document.getElementById('modalBody');
-const closeModalBtn=document.getElementById('closeModal');
-let lastFocused=null;
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && cssModalOpen()) {
+          closeStaticModal();
+          return;
+        }
+        if (e.key === "Escape" && modalBackdrop.classList.contains("open")) {
+          closeModal();
+          return;
+        }
+        if (e.key === "ArrowRight" || e.key === " ") {
+          e.preventDefault();
+          goNext();
+        } else if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          goPrev();
+        }
+      });
 
-const infoData={
-  video:{icon:'📱',title:'TikTok / YouTube',text:'Estos servicios pueden analizar lo que miramos, cuánto tiempo vemos un video, qué saltamos o con qué interactuamos. A partir de esos datos intentan encontrar patrones para ordenar y recomendar contenido.',example:'Ejemplo: dos personas pueden abrir YouTube al mismo tiempo y recibir recomendaciones diferentes.'},
-  spotify:{icon:'🎧',title:'Spotify',text:'Puede utilizar patrones de escucha para recomendar canciones, artistas o listas. No “conoce” nuestros gustos como una persona: analiza información sobre reproducciones, búsquedas y semejanzas entre contenidos.',example:'Ejemplo: después de escuchar varios temas de un estilo, pueden aparecer recomendaciones parecidas.'},
-  maps:{icon:'🗺️',title:'Google Maps',text:'Los sistemas de mapas combinan datos de calles, recorridos y condiciones del tránsito para calcular rutas y estimar tiempos. Algunos componentes usan modelos para mejorar predicciones.',example:'Ejemplo: una ruta que normalmente demora 15 minutos puede cambiar si detecta mucho tránsito.'},
-  face:{icon:'🙂',title:'Reconocimiento facial',text:'Un sistema puede comparar características de una imagen del rostro con patrones previamente registrados para intentar reconocer o verificar una identidad.',example:'Ejemplo: Face ID intenta comprobar si el rostro frente al teléfono coincide con el autorizado.'},
-  voice:{icon:'🎙️',title:'Asistentes de voz',text:'Primero convierten el sonido de nuestra voz en información que el sistema puede procesar. Después intentan reconocer palabras, interpretar el pedido y ejecutar una acción o producir una respuesta.',example:'Ejemplo: “poné una alarma a las 7” combina reconocimiento de voz e interpretación de la orden.'},
-  chat:{icon:'💬',title:'ChatGPT / DeepSeek',text:'Son sistemas capaces de trabajar con lenguaje y generar respuestas a partir de patrones aprendidos durante su entrenamiento. Pueden explicar, resumir, escribir o programar, pero también pueden equivocarse.',example:'Idea: que una respuesta esté bien escrita no significa que sea verdadera.'}
-};
+      // Actividad clasificador
+      const classifyItems = [
+        { word: "Perro", group: "A" },
+        { word: "Mesa", group: "B" },
+        { word: "Gato", group: "A" },
+        { word: "Celular", group: "B" },
+        { word: "Caballo", group: "A" },
+        { word: "Silla", group: "B" },
+        { word: "Tiburón", group: "A" },
+        { word: "Lápiz", group: "B" },
+        { word: "Elefante", group: "A" },
+        { word: "Mochila", group: "B" },
+      ];
+      let ci = 0;
+      const wordEl = document.getElementById("currentWord"),
+        feedbackEl = document.getElementById("classFeedback"),
+        progressEl = document.getElementById("classifierProgress");
+      function renderClassifier() {
+        if (ci >= classifyItems.length) {
+          wordEl.textContent = "¡Regla descubierta!";
+          progressEl.textContent = "Actividad completa";
+          feedbackEl.textContent =
+            "¿Cómo descubrieron la regla si nunca se las dije?";
+          feedbackEl.className = "feedback ok";
+          return;
+        }
+        wordEl.textContent = classifyItems[ci].word;
+        progressEl.textContent = `Ejemplo ${ci + 1} de ${classifyItems.length}`;
+        feedbackEl.textContent = "";
+        feedbackEl.className = "feedback";
+      }
+      document.querySelectorAll(".group-btn").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          if (ci >= classifyItems.length) return;
+          const ok = btn.dataset.group === classifyItems[ci].group;
+          feedbackEl.textContent = ok ? "Correcto" : "Incorrecto";
+          feedbackEl.className = "feedback " + (ok ? "ok" : "bad");
+          setTimeout(() => {
+            ci++;
+            renderClassifier();
+          }, 700);
+        }),
+      );
+      document
+        .getElementById("resetClassifier")
+        .addEventListener("click", () => {
+          ci = 0;
+          renderClassifier();
+        });
+      renderClassifier();
 
-const dictations={
- d1:{title:'Dictado 1 · IA en nuestra vida',html:'<p class="dictation"><strong>Inteligencia Artificial en nuestra vida</strong><br>La Inteligencia Artificial está presente en muchas herramientas que utilizamos todos los días.<br><br>Puede utilizarse para reconocer información, realizar recomendaciones o generar contenido.</p>'},
- d2:{title:'Dictado 2 · Definición',html:'<p class="dictation"><strong>¿Qué es la Inteligencia Artificial?</strong><br>La Inteligencia Artificial es una tecnología que permite que una computadora realice determinadas tareas que normalmente relacionamos con capacidades humanas, como reconocer imágenes, trabajar con textos, responder preguntas o encontrar patrones.<br><br>Muchas Inteligencias Artificiales funcionan analizando grandes cantidades de datos para encontrar patrones y generar una respuesta.<br><br><strong>Datos → Patrones → Respuesta</strong><br>La IA no aprende ni piensa exactamente como una persona.</p>'},
- d3:{title:'Dictado 3 · Entrenamiento',html:'<p class="dictation"><strong>Entrenamiento</strong><br>Durante el entrenamiento, una Inteligencia Artificial puede analizar muchos ejemplos para encontrar patrones.<br><br>La cantidad y la calidad de los ejemplos pueden afectar el resultado del sistema.</p>'},
- d4:{title:'Dictado 4 · Actividad',html:'<p class="dictation"><strong>Actividad: Somos una IA</strong><br>Podemos descubrir patrones observando ejemplos anteriores.<br><br>Algo parecido ocurre durante el entrenamiento de muchos sistemas de Inteligencia Artificial: reciben ejemplos y ajustan sus cálculos buscando patrones.</p>'},
- d5:{title:'Dictado 5 · Datos insuficientes',html:'<p class="dictation"><strong>La importancia de los datos</strong><br>Si tenemos pocos ejemplos, podemos encontrar un patrón equivocado.<br><br>La cantidad, calidad y variedad de los datos utilizados pueden afectar los resultados de una Inteligencia Artificial.</p>'},
- d6:{title:'Dictado 6 · Prueba de IA',html:'<p class="dictation"><strong>Prueba de Inteligencia Artificial</strong><br>Una Inteligencia Artificial puede responder correctamente o puede cometer errores. Por eso debemos comprobar sus respuestas.</p>'},
- d7:{title:'Dictado 7 · Uso responsable',html:'<p class="dictation"><strong>Uso responsable de Inteligencia Artificial</strong><br>Una Inteligencia Artificial puede generar respuestas incorrectas aunque parezcan convincentes.<br><br>Cuando una información es importante debemos comprobarla utilizando otras fuentes.<br><br><strong>1. Preguntar. &nbsp; 2. Comprobar. &nbsp; 3. Comparar.</strong></p>'},
- d8:{title:'Dictado final',html:'<p class="dictation">La Inteligencia Artificial es una herramienta que puede ayudarnos a aprender, trabajar y resolver problemas.<br><br>Debemos utilizarla con criterio y comprobar la información importante en lugar de aceptar automáticamente todas sus respuestas.</p>'}
-};
+      // Revelado
+      function resetReveal() {
+        revealStep = 0;
+        revealItems.forEach((x) => x.classList.remove("shown"));
+        document.getElementById("hypothesis").classList.remove("show");
+      }
+      document
+        .getElementById("resetReveal")
+        .addEventListener("click", resetReveal);
 
-function openModal(content){
-  lastFocused=document.activeElement;
-  modalBody.innerHTML=content;
-  modalBackdrop.classList.add('open');
-  modalBackdrop.setAttribute('aria-hidden','false');
-  closeModalBtn.focus();
-}
-function closeModal(){modalBackdrop.classList.remove('open');modalBackdrop.setAttribute('aria-hidden','true');if(lastFocused)lastFocused.focus()}
-closeModalBtn.addEventListener('click',closeModal);
-modalBackdrop.addEventListener('click',e=>{if(e.target===modalBackdrop)closeModal()});
+      // Copiar prompts
+      for (const btn of document.querySelectorAll("[data-copy]")) {
+        btn.addEventListener("click", async () => {
+          try {
+            if (!navigator.clipboard)
+              throw new Error("Clipboard no disponible");
+            await navigator.clipboard.writeText(btn.dataset.copy);
+            const old = btn.textContent;
+            btn.textContent = "Copiado ✓";
+            setTimeout(() => (btn.textContent = old), 1300);
+          } catch {
+            openModal(
+              `<div class="dictation-title">Prompt</div><p class="dictation">${btn.dataset.copy}</p>`,
+            );
+          }
+        });
+      }
 
-document.querySelectorAll('[data-info]').forEach(btn=>btn.addEventListener('click',()=>{
- const x=infoData[btn.dataset.info];
- openModal(`<div class="modal-icon">${x.icon}</div><h3>${x.title}</h3><p>${x.text}</p><div class="example">${x.example}</div>`)
-}));
-document.querySelectorAll('[data-dictation]').forEach(btn=>btn.addEventListener('click',()=>{
- const x=dictations[btn.dataset.dictation];
- openModal(`<div class="dictation-title">${x.title}</div>${x.html}`)
-}));
-
-function staticModalElement(){
- return document.querySelector('.modal-target.force-open') || (/^#(?:info|dict)-/.test(location.hash) ? document.querySelector(location.hash) : null);
-}
-function cssModalOpen(){return !!staticModalElement()}
-function openStaticModal(selector, launcher){
- const target=document.querySelector(selector);
- if(!target) return;
- document.querySelectorAll('.modal-target.force-open').forEach(x=>x.classList.remove('force-open'));
- target.classList.add('force-open');
- target.dataset.launcherId=launcher && launcher.id ? launcher.id : '';
- const close=target.querySelector('.close-modal');
- if(close) setTimeout(()=>close.focus(),0);
-}
-function closeStaticModal(target){
- if(!target) target=staticModalElement();
- if(!target) return;
- target.classList.remove('force-open');
- if(/^#(?:info|dict)-/.test(location.hash)){
-   try{history.replaceState(null,'',location.pathname+location.search)}catch(_){location.hash=''}
- }
-}
-// Refuerzo JS. Si JS no está disponible, los href + :target siguen funcionando.
-document.querySelectorAll('a[href^="#info-"],a[href^="#dict-"]').forEach(link=>{
- link.addEventListener('click',e=>{
-   const selector=link.getAttribute('href');
-   if(!selector || !document.querySelector(selector)) return;
-   e.preventDefault();
-   openStaticModal(selector,link);
- });
-});
-document.querySelectorAll('.modal-target .close-modal,.modal-target .modal-dismiss').forEach(link=>{
- link.addEventListener('click',e=>{
-   e.preventDefault();
-   closeStaticModal(link.closest('.modal-target'));
- });
-});
-function updateSlide(){
- slides.forEach((s,i)=>s.classList.toggle('active',i===current));
- dots.forEach((d,i)=>d.classList.toggle('active',i===current));
- document.getElementById('progress').textContent=`${current+1} / ${total}`;
-}
-function goNext(){
- if(modalBackdrop.classList.contains('open') || cssModalOpen()) return;
- if(current===REVEAL_SLIDE_INDEX && revealStep<revealItems.length){
-   revealItems[revealStep].classList.add('shown'); revealStep++;
-   if(revealStep>=5) document.getElementById('hypothesis').classList.add('show');
-   return;
- }
- if(current<total-1){current++;updateSlide()}
-}
-function goPrev(){
- if(modalBackdrop.classList.contains('open') || cssModalOpen()) return;
- if(current===REVEAL_SLIDE_INDEX && revealStep>0){
-   revealStep--;revealItems[revealStep].classList.remove('shown');
-   if(revealStep<5) document.getElementById('hypothesis').classList.remove('show');
-   return;
- }
- if(current>0){current--;updateSlide()}
-}
-document.getElementById('nextBtn').addEventListener('click',goNext);
-document.getElementById('prevBtn').addEventListener('click',goPrev);
-dots.forEach((d,i)=>d.addEventListener('click',()=>{if(cssModalOpen()||modalBackdrop.classList.contains('open'))return;current=i;updateSlide()}));
-
-document.addEventListener('keydown',e=>{
- if(e.key==='Escape' && cssModalOpen()){closeStaticModal();return}
- if(e.key==='Escape' && modalBackdrop.classList.contains('open')){closeModal();return}
- if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();goNext()}
- else if(e.key==='ArrowLeft'){e.preventDefault();goPrev()}
-});
-
-// Actividad clasificador
-const classifyItems=[
- {word:'Perro',group:'A'},{word:'Mesa',group:'B'},{word:'Gato',group:'A'},{word:'Celular',group:'B'},
- {word:'Caballo',group:'A'},{word:'Silla',group:'B'},{word:'Tiburón',group:'A'},{word:'Lápiz',group:'B'},
- {word:'Elefante',group:'A'},{word:'Mochila',group:'B'}
-];
-let ci=0;
-const wordEl=document.getElementById('currentWord'),feedbackEl=document.getElementById('classFeedback'),progressEl=document.getElementById('classifierProgress');
-function renderClassifier(){
- if(ci>=classifyItems.length){wordEl.textContent='¡Regla descubierta!';progressEl.textContent='Actividad completa';feedbackEl.textContent='¿Cómo descubrieron la regla si nunca se las dije?';feedbackEl.className='feedback ok';return}
- wordEl.textContent=classifyItems[ci].word;progressEl.textContent=`Ejemplo ${ci+1} de ${classifyItems.length}`;feedbackEl.textContent='';feedbackEl.className='feedback';
-}
-document.querySelectorAll('.group-btn').forEach(btn=>btn.addEventListener('click',()=>{
- if(ci>=classifyItems.length)return;
- const ok=btn.dataset.group===classifyItems[ci].group;
- feedbackEl.textContent=ok?'Correcto':'Incorrecto';feedbackEl.className='feedback '+(ok?'ok':'bad');
- setTimeout(()=>{ci++;renderClassifier()},700);
-}));
-document.getElementById('resetClassifier').addEventListener('click',()=>{ci=0;renderClassifier()});
-renderClassifier();
-
-// Revelado
-function resetReveal(){revealStep=0;revealItems.forEach(x=>x.classList.remove('shown'));document.getElementById('hypothesis').classList.remove('show')}
-document.getElementById('resetReveal').addEventListener('click',resetReveal);
-
-// Copiar prompts
-for(const btn of document.querySelectorAll('[data-copy]')){
- btn.addEventListener('click',async()=>{
-  try{if(!navigator.clipboard) throw new Error('Clipboard no disponible'); await navigator.clipboard.writeText(btn.dataset.copy);const old=btn.textContent;btn.textContent='Copiado ✓';setTimeout(()=>btn.textContent=old,1300)}
-  catch{openModal(`<div class="dictation-title">Prompt</div><p class="dictation">${btn.dataset.copy}</p>`)}
- })
-}
-
-updateSlide();
-</script>
-</body>
+      updateSlide();
+    </script>
+  </body>
 </html>

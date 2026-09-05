@@ -1,130 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Computer Science Classes</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Clases, actividades y materiales de informática para educación secundaria."
+    />
+    <title>Clases de Informática</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    body {
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #0d1117;
-      color: #f0f6fc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
+      body {
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #0d1117;
+        color: #f0f6fc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
 
-    .container {
-      width: 100%;
-      max-width: 760px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      color: #8b949e;
-      margin-bottom: 32px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-
-    .card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 14px;
-      padding: 32px 20px;
-      cursor: pointer;
-      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: #58a6ff;
-      background: #1c2128;
-    }
-
-    .icon {
-      font-size: 2.4rem;
-      margin-bottom: 14px;
-    }
-
-    .card h2 {
-      font-size: 1.25rem;
-      margin-bottom: 8px;
-    }
-
-    .card p {
-      color: #8b949e;
-      font-size: 0.95rem;
-    }
-
-    footer {
-      margin-top: 30px;
-      color: #6e7681;
-      font-size: 0.85rem;
-    }
-
-    @media (max-width: 600px) {
-      .cards {
-        grid-template-columns: 1fr;
+      .contenedor {
+        width: 100%;
+        max-width: 900px;
+        text-align: center;
       }
 
       h1 {
-        font-size: 1.6rem;
+        font-size: 2rem;
+        margin-bottom: 10px;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <main class="container">
-    <h1>Computer Science Classes</h1>
-    <p class="subtitle">Elegí una clase para comenzar.</p>
+      .introduccion {
+        color: #8b949e;
+        max-width: 680px;
+        margin: 0 auto 16px;
+        line-height: 1.55;
+      }
 
-    <section class="cards">
-      <div class="card" data-url="AI.html">
-        <div class="icon">🤖</div>
-        <h2>Introducción a la IA</h2>
-        <p>Clase sobre inteligencia artificial.</p>
-      </div>
+      .proximamente {
+        color: #8b949e;
+        font-size: 0.95rem;
+        margin-bottom: 32px;
+      }
 
-      <div class="card" data-url="AI%20PROMPTS.html">
-        <div class="icon">💬</div>
-        <h2>Prompts de IA</h2>
-        <p>Cómo escribir mejores instrucciones para una IA.</p>
-      </div>
-    </section>
+      .clases {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
 
-    <footer>
-      <span id="year"></span> · computer-science-classes
-    </footer>
-  </main>
+      .clase {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 14px;
+        padding: 32px 20px;
+        color: inherit;
+        text-decoration: none;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
 
-  <script>
-    document.querySelectorAll(".card").forEach(card => {
-      card.addEventListener("click", () => {
-        window.location.href = card.dataset.url;
-      });
-    });
+      .clase:hover,
+      .clase:focus-visible {
+        transform: translateY(-4px);
+        border-color: #58a6ff;
+        background: #1c2128;
+        outline: none;
+      }
 
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-</body>
+      .icon {
+        font-size: 2.4rem;
+        margin-bottom: 14px;
+      }
+
+      .clase h2 {
+        font-size: 1.25rem;
+        margin-bottom: 8px;
+      }
+
+      .clase p {
+        color: #8b949e;
+        font-size: 0.95rem;
+      }
+
+      footer {
+        margin-top: 30px;
+        color: #6e7681;
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 600px) {
+        .clases {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="contenedor">
+      <h1>Clases de Informática</h1>
+      <p class="introduccion">
+        Un espacio con clases, actividades y materiales para aprender
+        informática paso a paso. Cada presentación está pensada para trabajar en
+        el aula, participar y poner en práctica las ideas.
+      </p>
+      <p class="proximamente">
+        Este sitio está en crecimiento: voy a ir subiendo nuevas clases y
+        recursos durante el curso.
+      </p>
+
+      <section class="clases" aria-label="Clases disponibles">
+        <a class="clase" href="AI.html">
+          <div class="icon">🤖</div>
+          <h2>Introducción a la IA</h2>
+          <p>
+            Qué es la inteligencia artificial, cómo aprende y cómo usarla con
+            criterio.
+          </p>
+        </a>
+
+        <a class="clase" href="AI%20PROMPTS.html">
+          <div class="icon">💬</div>
+          <h2>Prompts de IA</h2>
+          <p>
+            Cómo escribir pedidos claros y aprovechar la IA para aprender mejor.
+          </p>
+        </a>
+      </section>
+
+      <footer><span id="anio"></span> · Clases de Informática</footer>
+    </main>
+
+    <script>
+      document.getElementById("anio").textContent = new Date().getFullYear();
+    </script>
+  </body>
 </html>
