@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Presentación sobre diagramas de flujo, algoritmos y condicionales.">
+  <title>Diagramas de flujo — Algoritmos</title>
+  <style>
+    :root {
+      --fondo: #f7f7fb;
+      --papel: #ffffff;
+      --tinta: #172033;
+      --suave: #657089;
+      --azul: #3d6df2;
+      --violeta: #7b61ff;
+      --verde: #25a26f;
+      --amarillo: #ffd85a;
+      --naranja: #ff8a3d;
+      --rojo: #e34b5f;
+      --linea: #dfe4ef;
+      --sombra: 0 18px 50px rgba(38, 50, 80, .12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body {
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background: var(--fondo);
+      color: var(--tinta);
+    }
+    body:before {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at 10% 15%, rgba(61,109,242,.09), transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(123,97,255,.09), transparent 25%);
+    }
+    .presentacion { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+    .diapositiva {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+      padding: 7vh 7vw 11vh;
+    }
+    .diapositiva.activa { display: flex; animation: entrar .35s ease both; }
+    @keyframes entrar { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .contenido { width: min(1180px, 100%); position: relative; z-index: 2; }
+    .insignia {
+      display: inline-flex; align-items: center; gap: .4rem; border-radius: 999px;
+      background: #eef2ff; color: var(--azul); font-weight: 900; font-size: .76rem;
+      padding: .45rem .72rem; text-transform: uppercase; letter-spacing: .1em;
+    }
+    h1 { font-size: clamp(3rem, 7vw, 6.3rem); line-height: .93; letter-spacing: -.055em; margin-top: 1rem; font-weight: 950; }
+    h2 { font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1; letter-spacing: -.04em; margin: .8rem 0 1rem; font-weight: 950; }
+    h3 { font-size: 1.12rem; }
+    .introduccion { font-size: clamp(1.05rem, 2.1vw, 1.45rem); line-height: 1.5; color: var(--suave); max-width: 860px; font-weight: 650; margin-top: 1rem; }
+    .azul { color: var(--azul); } .violeta { color: var(--violeta); } .verde { color: var(--verde); } .naranja { color: var(--naranja); }
+    .rejilla { display: grid; gap: 1rem; margin-top: 1.15rem; }
+    .dos { grid-template-columns: repeat(2, 1fr); } .tres { grid-template-columns: repeat(3, 1fr); } .cuatro { grid-template-columns: repeat(4, 1fr); }
+    .tarjeta { background: var(--papel); border: 1.5px solid var(--linea); border-radius: 20px; padding: 1.15rem; box-shadow: 0 8px 24px rgba(45,58,88,.07); }
+    .tarjeta p { margin-top: .45rem; color: var(--suave); line-height: 1.45; font-weight: 600; }
+    .tarjeta.azulada { background: #f0f4ff; border-color: #bfcdfb; }
+    .tarjeta.verdeada { background: #f0fbf6; border-color: #b9e4d1; }
+    .tarjeta.amarilla { background: #fff9e7; border-color: #f0d984; }
+    .icono { font-size: 2.2rem; margin-bottom: .6rem; }
+    .portada { display: grid; grid-template-columns: 1.12fr .88fr; gap: 2rem; align-items: center; }
+    .tarjeta-portada { background: linear-gradient(135deg, var(--azul), var(--violeta)); color: white; border-radius: 28px; padding: 1.5rem; box-shadow: var(--sombra); transform: rotate(1.5deg); }
+    .tarjeta-portada .grande { font-size: 3.5rem; margin-bottom: .8rem; }
+    .tarjeta-portada p { font-size: 1.18rem; line-height: 1.45; font-weight: 800; }
+    .tarjeta-portada small { display: block; margin-top: .8rem; opacity: .82; line-height: 1.4; }
+
+    /* Símbolos del diagrama, dibujados con CSS y sin imágenes externas. */
+    .simbolo { min-height: 53px; display: flex; align-items: center; justify-content: center; padding: .65rem .85rem; text-align: center; font-weight: 900; color: var(--tinta); background: white; border: 2px solid var(--tinta); }
+    .inicio { border-radius: 999px; background: #dff7ea; }
+    .proceso { background: #eaf0ff; }
+    .datos { background: #fff5ce; transform: skewX(-12deg); }
+    .datos span { transform: skewX(12deg); }
+    .rombo { width: 110px; height: 110px; min-height: 0; padding: .8rem; margin: 10px auto; transform: rotate(45deg); background: var(--amarillo); }
+    .rombo span { transform: rotate(-45deg); }
+    .flecha { height: 22px; width: 3px; margin: 6px auto; background: var(--tinta); position: relative; }
+    .flecha:after { content: ""; position: absolute; left: -5px; bottom: -1px; border-top: 9px solid var(--tinta); border-left: 6px solid transparent; border-right: 6px solid transparent; }
+    .mini-flujo { width: min(100%, 280px); margin: auto; }
+    .etiqueta-forma { display: block; margin-top: .75rem; color: var(--suave); font-size: .9rem; font-weight: 700; text-align: center; }
+    .fila-formas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; align-items: center; margin-top: 1rem; }
+    .forma { min-height: 175px; display: flex; flex-direction: column; justify-content: center; }
+
+    .formula { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin-top: 1.2rem; }
+    .formula .caja { background: var(--papel); border: 1.5px solid var(--linea); border-radius: 18px; padding: 1rem; }
+    .formula .numero { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; background: var(--azul); color: white; font-size: 1.2rem; font-weight: 950; margin-bottom: .7rem; }
+    .formula p { color: var(--suave); font-size: .9rem; line-height: 1.4; margin-top: .3rem; }
+    .paso-mate { display: grid; grid-template-columns: repeat(5, 1fr); gap: .55rem; align-items: center; margin-top: 1rem; }
+    .paso-mate .bloque { position: relative; min-height: 100px; padding: .7rem; border-radius: 15px; background: white; border: 1.5px solid var(--linea); font-weight: 850; display: flex; align-items: center; text-align: center; }
+    .paso-mate .bloque:not(:last-child):after { content: "→"; position: absolute; right: -.5rem; z-index: 2; color: var(--azul); font-size: 1.6rem; font-weight: 950; }
+    .diagrama-completo { display: grid; grid-template-columns: .72fr 1.28fr; gap: 1rem; margin-top: 1rem; }
+    .diagrama-vertical { padding: 1rem; background: white; border: 1.5px solid var(--linea); border-radius: 20px; box-shadow: var(--sombra); }
+    .diagrama-vertical .simbolo { max-width: 290px; margin-left: auto; margin-right: auto; }
+    .lectura { padding: 1.3rem; border-radius: 20px; background: #f0f4ff; border: 1.5px solid #bfcdfb; }
+    .lectura h3 { margin-bottom: .8rem; }
+    .lectura li { margin: .65rem 0; color: var(--suave); font-weight: 650; line-height: 1.35; }
+    .condicion { display: grid; grid-template-columns: .7fr 1.3fr; gap: 1.2rem; align-items: center; margin-top: 1rem; }
+    .caminos { background: white; border: 1.5px solid var(--linea); border-radius: 20px; padding: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .camino { padding: 1rem; border-radius: 16px; text-align: center; font-weight: 900; }
+    .camino.si { background: #e8f8f0; color: #126945; } .camino.no { background: #fff1f3; color: #9a2032; }
+    .aviso { margin-top: 1rem; border-radius: 16px; padding: 1rem 1.2rem; background: var(--tinta); color: white; display: flex; gap: .8rem; align-items: flex-start; }
+    .aviso p { color: #d5dbea; line-height: 1.45; font-weight: 650; }
+
+    .progreso { position: fixed; right: 22px; top: 18px; z-index: 50; background: var(--tinta); color: white; padding: .45rem .7rem; border-radius: 999px; font-size: .8rem; font-weight: 900; }
+    .tema { position: fixed; left: 22px; top: 18px; z-index: 50; background: var(--amarillo); padding: .45rem .65rem; border-radius: 10px; font-size: .78rem; font-weight: 950; }
+    .navegacion { position: fixed; right: 20px; bottom: 18px; z-index: 60; display: flex; gap: .5rem; }
+    .navegacion button { border: 1.5px solid var(--linea); background: white; border-radius: 10px; padding: .62rem .85rem; font-weight: 900; cursor: pointer; color: var(--tinta); }
+    .navegacion button:hover { border-color: var(--azul); color: var(--azul); transform: translateY(-1px); }
+    .puntos { position: fixed; left: 22px; bottom: 24px; display: flex; gap: 5px; z-index: 60; }
+    .puntos span { width: 8px; height: 8px; border-radius: 50%; background: #c6ccda; transition: .2s; }
+    .puntos span.activo { width: 28px; border-radius: 999px; background: var(--azul); }
+
+    @media (max-width: 760px) {
+      .diapositiva { align-items: flex-start; overflow-y: auto; padding: 80px 20px 90px; }
+      .portada, .dos, .tres, .cuatro, .fila-formas, .formula, .diagrama-completo, .condicion { grid-template-columns: 1fr; }
+      .paso-mate { grid-template-columns: 1fr; } .paso-mate .bloque:not(:last-child):after { content: "↓"; right: auto; bottom: -.78rem; left: 48%; }
+      .caminos { grid-template-columns: 1fr; } h1 { font-size: 3.25rem; } h2 { font-size: 2.5rem; }
+      .tema { left: 12px; top: 12px; } .progreso { right: 12px; top: 12px; } .puntos { left: 14px; bottom: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tema">ALGORITMOS · CLASE VISUAL</div>
+  <div class="progreso" id="progreso" aria-live="polite">1 / 8</div>
+
+  <main class="presentacion" aria-label="Presentación sobre diagramas de flujo">
+    <section class="diapositiva activa">
+      <div class="contenido portada">
+        <div>
+          <span class="insignia">Presentación breve</span>
+          <h1>Diagramas<br>de <span class="azul">flujo</span></h1>
+          <p class="introduccion">Una forma visual de mostrar los pasos de un algoritmo, en el orden en que deben suceder.</p>
+        </div>
+        <aside class="tarjeta-portada">
+          <div class="grande">🧭</div>
+          <p>Un buen diagrama deja claro qué hacer, cuándo hacerlo y qué camino tomar.</p>
+          <small>Usamos formas + flechas para contar una secuencia sin escribir un texto largo.</small>
+        </aside>
+      </div>
+    </section>
+
+    <section class="diapositiva">
+      <div class="contenido">
+        <span class="insignia">La idea central</span>
+        <h2>Un algoritmo es un plan.<br>El diagrama lo <span class="violeta">muestra.</span></h2>
+        <div class="rejilla dos">
+          <article class="tarjeta azulada"><div class="icono">📝</div><h3>Algoritmo</h3><p>Una serie de pasos ordenados para lograr algo o resolver un problema.</p></article>
+          <article class="tarjeta verdeada"><div class="icono">🗺️</div><h3>Diagrama de flujo</h3><p>La representación visual de esos mismos pasos, conectados con flechas.</p></article>
+        </div>
+        <div class="aviso"><span>💡</span><div><strong>El orden importa.</strong><p>Si hacemos los pasos de cualquier manera, el resultado puede salir mal.</p></div></div>
+      </div>
+    </section>
+
+    <section class="diapositiva">
+      <div class="contenido">
+        <span class="insignia">Vocabulario visual</span>
+        <h2>Cuatro símbolos para<br>empezar <span class="naranja">hoy.</span></h2>
+        <div class="fila-formas">
+          <article class="tarjeta forma"><div class="simbolo inicio">Inicio / Fin</div><span class="etiqueta-forma">Marca dónde comienza o termina.</span></article>
+          <article class="tarjeta forma"><div class="simbolo proceso">Acción</div><span class="etiqueta-forma">Indica algo que hay que hacer.</span></article>
+          <article class="tarjeta forma"><div class="simbolo datos"><span>Dato</span></div><span class="etiqueta-forma">Muestra información que entra o sale.</span></article>
+          <article class="tarjeta forma"><div class="simbolo rombo"><span>¿Decisión?</span></div><span class="etiqueta-forma">Abre caminos: sí / no.</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="diapositiva">
+      <div class="contenido">
+        <span class="insignia">Casos de uso</span>
+        <h2>Ya pensás en <span class="azul">secuencias</span><br>todos los días.</h2>
+        <div class="rejilla tres">
+          <article class="tarjeta"><div class="icono">🎒</div><h3>Ir al liceo</h3><p>Vestirse, preparar la mochila, revisar útiles y salir.</p></article>
+          <article class="tarjeta"><div class="icono">🚌</div><h3>Tomar un ómnibus</h3><p>Si viene el que sirve, subo. Si no, espero.</p></article>
+          <article class="tarjeta"><div class="icono">🧉</div><h3>Preparar el mate</h3><p>Una secuencia concreta que veremos completa.</p></article>
+          <article class="tarjeta"><div class="icono">🛒</div><h3>Comprar algo</h3><p>Elegir, pagar y llevar el producto.</p></article>
+          <article class="tarjeta"><div class="icono">🌧️</div><h3>Salir de casa</h3><p>Mirar el tiempo y decidir si llevar paraguas.</p></article>
+          <article class="tarjeta"><div class="icono">🍲</div><h3>Una receta</h3><p>Seguir los ingredientes en el orden correcto.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="diapositiva">
+      <div class="contenido">
+        <span class="insignia">Cómo hacerlo</span>
+        <h2>Del objetivo al<br><span class="verde">diagrama.</span></h2>
+        <div class="formula">
+          <article class="caja"><div class="numero">1</div><h3>Objetivo</h3><p>Elegí qué querés lograr: “preparar un mate”.</p></article>
+          <article class="caja"><div class="numero">2</div><h3>Pasos</h3><p>Anotalos en el orden correcto.</p></article>
+          <article class="caja"><div class="numero">3</div><h3>Decisiones</h3><p>Buscá si aparece un “si pasa algo…”.</p></article>
+          <article class="caja"><div class="numero">4</div><h3>Flechas</h3><p>Uní las formas y revisá que se lea de inicio a fin.</p></article>
+        </div>
+        <div class="aviso"><span>✓</span><div><strong>Regla simple:</strong><p>cada flecha debe indicar cuál es el próximo paso. No es decoración: muestra el orden.</p></div></div>
+      </div>
+    </section>
+
+    <section class="diapositiva">
+      <div class="contenido">
+        <span class="insignia">Ejemplo del material</span>
+        <h2>Algoritmo: preparar<br>el <span class="naranja">mate.</span></h2>
+        <p class="introduccion">Primero, miramos toda la secuencia. No hay decisiones: solo acciones que deben respetar este orden.</p>
+        <div class="paso-mate">
+          <div class="bloque">1. Calentar<br>el agua</div>
+          <div class="bloque">2. Poner yerba<br>en el mate</div>
+          <div class="bloque">3. Colocar<br>la bombilla</div>
+          <div class="bloque">4. Agregar un poco<br>de agua</div>
+          <div class="bloque">5. Cebar<br>el mate</div>
+        </div>
+        <div class="aviso"><span>👀</span><div><strong>Detalle importante:</strong><p>la bombilla se coloca antes de agregar un poco de agua.</p></div></div>
+      </div>
+    </section>
+
+    <section class="diapositiva">
+      <div class="contenido">
+        <span class="insignia">El mismo ejemplo, dibujado</span>
+        <h2>Ahora sí: el<br><span class="violeta">diagrama de flujo.</span></h2>
+        <div class="diagrama-completo">
+          <div class="diagrama-vertical">
+            <div class="simbolo inicio">INICIO</div><div class="flecha"></div>
+            <div class="simbolo proceso">Calentar el agua</div><div class="flecha"></div>
+            <div class="simbolo proceso">Poner yerba en el mate</div><div class="flecha"></div>
+            <div class="simbolo proceso">Colocar la bombilla</div><div class="flecha"></div>
+            <div class="simbolo proceso">Agregar un poco de agua</div><div class="flecha"></div>
+            <div class="simbolo proceso">Cebar el mate</div><div class="flecha"></div>
+            <div class="simbolo inicio">FIN</div>
+          </div>
+          <aside class="lectura">
+            <h3>¿Qué se ve de un vistazo?</h3>
+            <ul>
+              <li>El inicio y el final están bien marcados.</li>
+              <li>Cada rectángulo es una acción.</li>
+              <li>Las flechas muestran qué sigue.</li>
+              <li>Como no hay un “si…”, no necesitamos un rombo.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="diapositiva">
+      <div class="contenido">
+        <span class="insignia">Cuando hay una elección</span>
+        <h2>El rombo aparece<br>para <span class="azul">decidir.</span></h2>
+        <p class="introduccion">Un condicional depende de una situación: <strong>si pasa algo, hago una cosa.</strong></p>
+        <div class="condicion">
+          <div class="tarjeta amarilla" style="text-align:center;"><div class="simbolo proceso">Mirar el tiempo</div><div class="flecha"></div><div class="simbolo rombo"><span>¿Llueve?</span></div></div>
+          <div class="caminos">
+            <div class="camino si"><div style="font-size:2rem;">SÍ</div><p style="margin-top:.45rem;">Llevar paraguas</p></div>
+            <div class="camino no"><div style="font-size:2rem;">NO</div><p style="margin-top:.45rem;">Salir de casa</p></div>
+          </div>
+        </div>
+        <div class="aviso"><span>🧠</span><div><strong>Para recordar:</strong><p>algoritmo = pasos ordenados. Condicional = una decisión que depende de una situación.</p></div></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="puntos" id="puntos" aria-hidden="true"></div>
+  <div class="navegacion">
+    <button type="button" id="anterior" aria-label="Diapositiva anterior">← Atrás</button>
+    <button type="button" id="siguiente" aria-label="Diapositiva siguiente">Siguiente →</button>
+  </div>
+
+  <script>
+    /* Navegación sencilla y local: botones, flechas del teclado y pantalla táctil. */
+    var diapositivas = document.querySelectorAll(".diapositiva");
+    var puntoContenedor = document.getElementById("puntos");
+    var textoProgreso = document.getElementById("progreso");
+    var posicion = 0;
+    var inicioToque = 0;
+
+    for (var indice = 0; indice < diapositivas.length; indice++) {
+      var punto = document.createElement("span");
+      puntoContenedor.appendChild(punto);
+    }
+
+    function mostrarDiapositiva(nuevaPosicion) {
+      if (nuevaPosicion < 0) nuevaPosicion = 0;
+      if (nuevaPosicion >= diapositivas.length) nuevaPosicion = diapositivas.length - 1;
+      diapositivas[posicion].classList.remove("activa");
+      posicion = nuevaPosicion;
+      diapositivas[posicion].classList.add("activa");
+      var puntos = puntoContenedor.querySelectorAll("span");
+      for (var contador = 0; contador < puntos.length; contador++) {
+        puntos[contador].classList.toggle("activo", contador === posicion);
+      }
+      textoProgreso.textContent = (posicion + 1) + " / " + diapositivas.length;
+      document.getElementById("anterior").disabled = posicion === 0;
+      document.getElementById("siguiente").disabled = posicion === diapositivas.length - 1;
+    }
+
+    document.getElementById("anterior").onclick = function () { mostrarDiapositiva(posicion - 1); };
+    document.getElementById("siguiente").onclick = function () { mostrarDiapositiva(posicion + 1); };
+    document.addEventListener("keydown", function (evento) {
+      if (evento.key === "ArrowRight" || evento.key === " ") mostrarDiapositiva(posicion + 1);
+      if (evento.key === "ArrowLeft") mostrarDiapositiva(posicion - 1);
+    });
+    document.addEventListener("touchstart", function (evento) { inicioToque = evento.changedTouches[0].screenX; }, { passive: true });
+    document.addEventListener("touchend", function (evento) {
+      var diferencia = evento.changedTouches[0].screenX - inicioToque;
+      if (diferencia < -55) mostrarDiapositiva(posicion + 1);
+      if (diferencia > 55) mostrarDiapositiva(posicion - 1);
+    }, { passive: true });
+    mostrarDiapositiva(0);
+  </script>
+</body>
+</html>
