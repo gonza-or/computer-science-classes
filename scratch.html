@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Introducción a la programación y Scratch para estudiantes de 13 años."
+    />
+    <title>Programar con Scratch</title>
+    <style>
+      :root {
+        --bg: #080b1d;
+        --bg2: #111a3d;
+        --card: rgba(255, 255, 255, 0.08);
+        --ink: #f8fbff;
+        --muted: #b7c2e5;
+        --blue: #4c97ff;
+        --yellow: #ffbf00;
+        --orange: #ff8c1a;
+        --purple: #9966ff;
+        --green: #47c978;
+        --red: #ff6680;
+        --line: rgba(255, 255, 255, 0.16);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+      }
+      button {
+        font: inherit;
+      }
+      .deck {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 12% 14%, #263b82 0, transparent 28%),
+          radial-gradient(circle at 88% 78%, #5b276e 0, transparent 24%),
+          var(--bg);
+      }
+      .bubble {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(4px);
+        opacity: 0.28;
+        pointer-events: none;
+        animation: float 9s ease-in-out infinite alternate;
+      }
+      .bubble.one {
+        width: 220px;
+        height: 220px;
+        left: -70px;
+        bottom: -70px;
+        background: var(--yellow);
+      }
+      .bubble.two {
+        width: 140px;
+        height: 140px;
+        right: 8%;
+        top: 8%;
+        background: var(--blue);
+        animation-delay: -3s;
+      }
+      @keyframes float {
+        to {
+          transform: translate(24px, -18px) scale(1.08);
+        }
+      }
+      .slide {
+        display: none;
+        position: absolute;
+        inset: 0;
+        align-items: center;
+        justify-content: center;
+        padding: 6vh 8vw 11vh;
+        overflow: auto;
+      }
+      .slide.active {
+        display: flex;
+        animation: in 0.38s ease both;
+      }
+      @keyframes in {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .content {
+        width: min(1120px, 100%);
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+      .badge {
+        display: inline-block;
+        color: #dbe9ff;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.07);
+        padding: 0.42rem 0.75rem;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.11em;
+        font-size: 0.74rem;
+        font-weight: 850;
+      }
+      h1 {
+        font-size: clamp(3rem, 7vw, 6.3rem);
+        letter-spacing: -0.06em;
+        line-height: 0.93;
+        text-transform: uppercase;
+        font-weight: 950;
+        margin: 1rem 0;
+      }
+      h2 {
+        font-size: clamp(2rem, 4.7vw, 4rem);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        margin: 0.7rem 0 1.1rem;
+      }
+      h3 {
+        font-size: 1.22rem;
+      }
+      .blue {
+        color: var(--blue);
+      }
+      .yellow {
+        color: var(--yellow);
+      }
+      .green {
+        color: var(--green);
+      }
+      .purple {
+        color: var(--purple);
+      }
+      .lead {
+        max-width: 800px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: clamp(1.05rem, 2vw, 1.35rem);
+        line-height: 1.5;
+        font-weight: 600;
+      }
+      .grid {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1.25rem;
+      }
+      .two {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .three {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .four {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 1.25rem;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+      }
+      .card p {
+        color: var(--muted);
+        font-size: 0.98rem;
+        line-height: 1.46;
+        margin-top: 0.52rem;
+      }
+      .icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .note-button {
+        border: 0;
+        cursor: pointer;
+        color: #10213e;
+        background: var(--yellow);
+        padding: 0.72rem 1rem;
+        border-radius: 12px;
+        font-weight: 900;
+        margin-top: 1.1rem;
+        box-shadow: 0 7px 0 #cf9400;
+        transition: 0.15s;
+      }
+      .note-button:hover {
+        transform: translateY(-2px);
+      }
+      .note-button:active {
+        transform: translateY(3px);
+        box-shadow: 0 3px 0 #cf9400;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 2rem;
+        align-items: center;
+        text-align: left;
+      }
+      .hero-card {
+        border-radius: 25px;
+        padding: 1.4rem;
+        background: linear-gradient(145deg, #ffbf00, #ff7e23);
+        color: #132342;
+        transform: rotate(2deg);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      }
+      .hero-card .big {
+        font-size: 4rem;
+      }
+      .hero-card p {
+        font-size: 1.25rem;
+        font-weight: 900;
+        line-height: 1.2;
+      }
+      .hero-card small {
+        display: block;
+        margin-top: 0.8rem;
+        font-weight: 650;
+        line-height: 1.35;
+      }
+      .steps {
+        display: flex;
+        align-items: stretch;
+        gap: 0.6rem;
+        margin-top: 1.25rem;
+        text-align: left;
+      }
+      .step {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 17px;
+        background: var(--card);
+        border: 1px solid var(--line);
+      }
+      .step b {
+        color: var(--yellow);
+        font-size: 0.8rem;
+      }
+      .step p {
+        color: var(--muted);
+        margin-top: 0.35rem;
+        line-height: 1.35;
+      }
+      .arrow {
+        display: grid;
+        place-items: center;
+        color: var(--yellow);
+        font-size: 1.8rem;
+        font-weight: 900;
+      }
+      .code {
+        background: #10182f;
+        border: 1px solid #3b568e;
+        border-radius: 18px;
+        max-width: 740px;
+        margin: 1rem auto 0;
+        padding: 1.15rem;
+        text-align: left;
+        font:
+          700 1rem/1.65 ui-monospace,
+          SFMono-Regular,
+          Consolas,
+          monospace;
+        color: #e8efff;
+      }
+      .accent-line {
+        color: #7ce1ff;
+      }
+      .language {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 1.1rem;
+      }
+      .chip {
+        padding: 0.65rem 0.9rem;
+        background: #182751;
+        border: 1px solid #4564ab;
+        border-radius: 999px;
+        font-weight: 850;
+      }
+      .chip:nth-child(2) {
+        border-color: #e4b235;
+      }
+      .chip:nth-child(3) {
+        border-color: #bb78ef;
+      }
+      .chip:nth-child(4) {
+        border-color: #54ca83;
+      }
+      .scratch-window {
+        margin: 1rem auto 0;
+        max-width: 850px;
+        border: 7px solid #f6f7fb;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #eaf0f9;
+        color: #26334c;
+        text-align: left;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      }
+      .scratch-top {
+        height: 42px;
+        padding: 10px 14px;
+        background: #ffab19;
+        font-weight: 950;
+        color: #592e00;
+      }
+      .scratch-body {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr 0.9fr;
+        min-height: 255px;
+      }
+      .blocks {
+        padding: 14px;
+        background: #eff3f8;
+      }
+      .block {
+        padding: 8px 10px;
+        border-radius: 8px;
+        color: white;
+        margin: 7px 0;
+        font-weight: 800;
+        font-size: 0.85rem;
+        width: max-content;
+        max-width: 100%;
+      }
+      .motion {
+        background: #4c97ff;
+      }
+      .looks {
+        background: #9966ff;
+      }
+      .events {
+        background: #ffbf00;
+        color: #563d00;
+      }
+      .control {
+        background: #ffab19;
+        color: #563d00;
+      }
+      .area {
+        padding: 25px 13px;
+        background: #fdfefe;
+        border-left: 2px solid #d8dfeb;
+        border-right: 2px solid #d8dfeb;
+      }
+      .script {
+        display: inline-block;
+        background: #ffbf00;
+        color: #503b03;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 900;
+      }
+      .stage {
+        padding: 15px;
+        background: #fff;
+      }
+      .scene {
+        height: 156px;
+        display: grid;
+        place-items: center;
+        font-size: 5rem;
+        border: 2px solid #b6c1d2;
+        border-radius: 7px;
+        background: linear-gradient(#80d4ff 0 65%, #89d454 65%);
+      }
+      .caption {
+        margin-top: 7px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: #62718b;
+      }
+      .challenge {
+        max-width: 780px;
+        margin: 1rem auto;
+        padding: 1.2rem;
+        border-radius: 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(76, 151, 255, 0.22),
+          rgba(153, 102, 255, 0.2)
+        );
+        border: 1px solid #7d90ca;
+      }
+      .challenge p {
+        color: #dce8ff;
+        margin-top: 0.5rem;
+        line-height: 1.45;
+      }
+      .controls {
+        position: fixed;
+        right: 20px;
+        bottom: 18px;
+        z-index: 10;
+        display: flex;
+        gap: 0.5rem;
+      }
+      .controls button {
+        cursor: pointer;
+        color: var(--ink);
+        background: #162349;
+        border: 1px solid #536ba4;
+        border-radius: 11px;
+        padding: 0.62rem 0.85rem;
+        font-weight: 850;
+      }
+      .controls button:hover {
+        border-color: var(--yellow);
+        color: var(--yellow);
+      }
+      .progress {
+        position: fixed;
+        top: 17px;
+        right: 20px;
+        z-index: 10;
+        padding: 0.4rem 0.7rem;
+        border-radius: 999px;
+        background: #111a35;
+        border: 1px solid var(--line);
+        font-size: 0.8rem;
+        font-weight: 850;
+      }
+      .topic {
+        position: fixed;
+        top: 17px;
+        left: 20px;
+        z-index: 10;
+        color: #253148;
+        background: var(--yellow);
+        border-radius: 9px;
+        padding: 0.4rem 0.65rem;
+        font-size: 0.78rem;
+        font-weight: 950;
+      }
+      .modal-wrap {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(3, 6, 16, 0.74);
+        padding: 20px;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-wrap.show {
+        display: flex;
+      }
+      .modal {
+        position: relative;
+        width: min(650px, 100%);
+        background: #fff;
+        color: #1b2941;
+        border-radius: 22px;
+        padding: 1.5rem;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5);
+      }
+      .modal h3 {
+        color: #3159c4;
+        padding-right: 2rem;
+      }
+      .modal .copy {
+        margin-top: 0.8rem;
+        background: #f0f4ff;
+        border-left: 5px solid var(--blue);
+        padding: 0.95rem;
+        border-radius: 8px;
+        line-height: 1.5;
+        font-weight: 600;
+      }
+      .close {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        color: #52627c;
+        font-size: 1.8rem;
+      }
+      @media (max-width: 760px) {
+        .slide {
+          align-items: flex-start;
+          padding: 75px 20px 95px;
+        }
+        .hero,
+        .two,
+        .three,
+        .four {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          text-align: center;
+        }
+        .steps {
+          flex-direction: column;
+        }
+        .arrow {
+          transform: rotate(90deg);
+          height: 24px;
+        }
+        .scratch-body {
+          grid-template-columns: 1fr;
+        }
+        .area {
+          border: 0;
+          border-top: 2px solid #d8dfeb;
+          border-bottom: 2px solid #d8dfeb;
+        }
+        .topic {
+          left: 12px;
+          top: 12px;
+        }
+        .progress {
+          right: 12px;
+          top: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck">
+      <div class="bubble one"></div>
+      <div class="bubble two"></div>
+      <div class="topic">7.º · Programación</div>
+      <div class="progress" id="progress">1 / 9</div>
+
+      <section class="slide active">
+        <div class="content hero">
+          <div>
+            <div class="badge">Una nueva forma de crear</div>
+            <h1>Programar con <span class="yellow">Scratch</span></h1>
+            <p class="lead">
+              Vamos a descubrir cómo darle instrucciones a una computadora para
+              crear juegos, historias y animaciones.
+            </p>
+          </div>
+          <div class="hero-card">
+            <div class="big">🐱💻</div>
+            <p>
+              La computadora no adivina: necesita que le expliquemos cada paso.
+            </p>
+            <small
+              >Hoy vamos de una idea simple a nuestro primer programa.</small
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">Primero lo primero</div>
+          <h2>¿Qué es <span class="blue">programar</span>?</h2>
+          <p class="lead">
+            Programar es escribir instrucciones claras y ordenadas para que una
+            computadora haga una tarea.
+          </p>
+          <div class="steps">
+            <div class="step">
+              <b>01 · IDEA</b>
+              <p>Quiero que un personaje salte.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+              <b>02 · INSTRUCCIONES</b>
+              <p>Decido qué tiene que hacer y en qué orden.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+              <b>03 · RESULTADO</b>
+              <p>La computadora ejecuta las instrucciones.</p>
+            </div>
+          </div>
+          <button
+            class="note-button"
+            data-note="Programar es escribir instrucciones claras y ordenadas para que una computadora haga una tarea."
+          >
+            ✏️ Copiar en el cuaderno
+          </button>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">Pensar antes de crear</div>
+          <h2>Una receta también es un <span class="yellow">programa</span></h2>
+          <p class="lead">
+            Antes de programar, ordenamos pasos. Si cambiamos el orden, el
+            resultado puede cambiar.
+          </p>
+          <div class="grid three">
+            <div class="card">
+              <div class="icon">🥪</div>
+              <h3>Hacer un sándwich</h3>
+              <p>Pan → relleno → otro pan.</p>
+            </div>
+            <div class="card">
+              <div class="icon">🕹️</div>
+              <h3>Un juego</h3>
+              <p>Al tocar una tecla, el personaje se mueve.</p>
+            </div>
+            <div class="card">
+              <div class="icon">🤖</div>
+              <h3>Un robot</h3>
+              <p>Avanzar, girar y detenerse en el momento correcto.</p>
+            </div>
+          </div>
+          <div class="challenge">
+            <h3>Mini desafío</h3>
+            <p>
+              ¿Qué instrucciones le darías a un robot para que salga del salón y
+              llegue a la puerta? Probá decirlas sin saltear ningún paso.
+            </p>
+          </div>
+          <button
+            class="note-button"
+            data-note="Un programa es una secuencia de instrucciones. El orden de los pasos importa porque cambia el resultado."
+          >
+            ✏️ Copiar en el cuaderno
+          </button>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">Cómo le hablamos a una computadora</div>
+          <h2>
+            ¿Qué es un <span class="purple">lenguaje de programación</span>?
+          </h2>
+          <p class="lead">
+            Es una forma de escribir instrucciones que la computadora puede
+            interpretar. Cada lenguaje tiene sus propias palabras, reglas y
+            manera de organizarse.
+          </p>
+          <div class="code">
+            <span class="accent-line">mostrar</span>("¡Hola!");
+          </div>
+          <div class="language">
+            <span class="chip">Python</span><span class="chip">JavaScript</span
+            ><span class="chip">HTML</span><span class="chip">Scratch</span>
+          </div>
+          <button
+            class="note-button"
+            data-note="Un lenguaje de programación es una forma de escribir instrucciones que la computadora puede interpretar. Cada lenguaje tiene sus propias reglas."
+          >
+            ✏️ Copiar en el cuaderno
+          </button>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">No todos se escriben igual</div>
+          <h2>Hay muchos lenguajes</h2>
+          <div class="grid four">
+            <div class="card">
+              <div class="icon">🐍</div>
+              <h3>Python</h3>
+              <p>
+                Se usa para aprender, analizar datos y crear muchos tipos de
+                programas.
+              </p>
+            </div>
+            <div class="card">
+              <div class="icon">🌐</div>
+              <h3>JavaScript</h3>
+              <p>Hace que las páginas web sean interactivas.</p>
+            </div>
+            <div class="card">
+              <div class="icon">📱</div>
+              <h3>Otros lenguajes</h3>
+              <p>Sirven para apps, videojuegos, robots y mucho más.</p>
+            </div>
+            <div class="card">
+              <div class="icon">🧩</div>
+              <h3>Scratch</h3>
+              <p>
+                Usa bloques que encajan para empezar a programar de forma
+                visual.
+              </p>
+            </div>
+          </div>
+          <p class="lead" style="margin-top: 1.2rem">
+            No hay un lenguaje mejor para todo: elegimos según lo que queremos
+            crear.
+          </p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">Nuestro lenguaje de hoy</div>
+          <h2>¿Qué es <span class="yellow">Scratch</span>?</h2>
+          <p class="lead">
+            Scratch es un lenguaje de programación visual. En vez de escribir
+            muchas líneas de código, armamos programas uniendo bloques como si
+            fueran piezas de construcción.
+          </p>
+          <div class="grid three">
+            <div class="card">
+              <div class="icon">🧩</div>
+              <h3>Bloques</h3>
+              <p>
+                Cada bloque es una instrucción: mover, hablar, repetir o
+                esperar.
+              </p>
+            </div>
+            <div class="card">
+              <div class="icon">🐱</div>
+              <h3>Objetos</h3>
+              <p>
+                Los personajes y elementos que programamos se llaman objetos o
+                sprites.
+              </p>
+            </div>
+            <div class="card">
+              <div class="icon">🎬</div>
+              <h3>Proyectos</h3>
+              <p>
+                Podemos crear juegos, historias, animaciones y simulaciones.
+              </p>
+            </div>
+          </div>
+          <button
+            class="note-button"
+            data-note="Scratch es un lenguaje de programación visual. Usamos bloques que encajan para crear instrucciones, juegos, historias y animaciones."
+          >
+            ✏️ Copiar en el cuaderno
+          </button>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">Conozcamos la pantalla</div>
+          <h2>Las partes de <span class="yellow">Scratch</span></h2>
+          <div class="scratch-window">
+            <div class="scratch-top">Scratch · Mi primer proyecto</div>
+            <div class="scratch-body">
+              <div class="blocks">
+                <b>Bloques</b>
+                <div class="block motion">mover 10 pasos</div>
+                <div class="block looks">decir ¡Hola! por 2 seg.</div>
+                <div class="block events">al presionar bandera verde</div>
+                <div class="block control">repetir 10</div>
+              </div>
+              <div class="area">
+                <b>Área de programación</b><br /><br /><span class="script"
+                  >al presionar ⚑<br />decir “¡Hola!” por 2 segundos<br />mover
+                  10 pasos</span
+                >
+              </div>
+              <div class="stage">
+                <b>Escenario</b>
+                <div class="scene">🐱</div>
+                <div class="caption">
+                  Aquí vemos lo que hace nuestro programa.
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="note-button"
+            data-note="En Scratch usamos: bloques para elegir instrucciones, el área de programación para unirlas y el escenario para ver el resultado. Los personajes se llaman objetos o sprites."
+          >
+            ✏️ Copiar en el cuaderno
+          </button>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">Nuestro primer programa</div>
+          <h2>Hagamos que el gato <span class="green">salude</span></h2>
+          <p class="lead">
+            Un programa en Scratch empieza muchas veces con un evento: algo que
+            lo pone en marcha.
+          </p>
+          <div class="steps">
+            <div class="step">
+              <b>EVENTO</b>
+              <p>Al presionar la bandera verde.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+              <b>ACCIÓN</b>
+              <p>Decir “¡Hola!” durante 2 segundos.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+              <b>ACCIÓN</b>
+              <p>Mover 10 pasos.</p>
+            </div>
+          </div>
+          <div class="challenge">
+            <h3>Probá modificarlo</h3>
+            <p>
+              Cambiá el mensaje del gato. Después agregá otra acción: ¿puede
+              cambiar de disfraz, tocar un sonido o girar?
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="badge">Para recordar</div>
+          <h2>
+            Una idea + instrucciones = <span class="yellow">proyecto</span>
+          </h2>
+          <div class="grid three">
+            <div class="card">
+              <div class="icon">1️⃣</div>
+              <h3>Programación</h3>
+              <p>Dar instrucciones ordenadas a una computadora.</p>
+            </div>
+            <div class="card">
+              <div class="icon">2️⃣</div>
+              <h3>Lenguaje</h3>
+              <p>La forma que usamos para escribir esas instrucciones.</p>
+            </div>
+            <div class="card">
+              <div class="icon">3️⃣</div>
+              <h3>Scratch</h3>
+              <p>Un lenguaje visual que usa bloques para crear proyectos.</p>
+            </div>
+          </div>
+          <button
+            class="note-button"
+            data-note="Programar es dar instrucciones ordenadas. Un lenguaje de programación nos permite escribir esas instrucciones. Scratch es un lenguaje visual que usa bloques para crear proyectos."
+          >
+            ✏️ Copiar en el cuaderno
+          </button>
+          <p class="lead" style="margin-top: 1.2rem">
+            <b>Próxima clase:</b> vamos a crear nuestro primer proyecto con
+            Scratch. 🚀
+          </p>
+        </div>
+      </section>
+
+      <div class="controls">
+        <button id="prev">← Anterior</button
+        ><button id="next">Siguiente →</button>
+      </div>
+    </main>
+    <div class="modal-wrap" id="modalWrap" aria-hidden="true">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <button class="close" id="close" aria-label="Cerrar">×</button>
+        <h3 id="modalTitle">Copiar en el cuaderno</h3>
+        <div class="copy" id="modalText"></div>
+      </div>
+    </div>
+    <script>
+      const slides = [...document.querySelectorAll(".slide")];
+      let current = 0;
+      const progress = document.getElementById("progress");
+      function show(n) {
+        current = (n + slides.length) % slides.length;
+        slides.forEach((s, i) => s.classList.toggle("active", i === current));
+        progress.textContent = `${current + 1} / ${slides.length}`;
+      }
+      document.getElementById("next").onclick = () => show(current + 1);
+      document.getElementById("prev").onclick = () => show(current - 1);
+      document.addEventListener("keydown", (e) => {
+        if (document.getElementById("modalWrap").classList.contains("show")) {
+          if (e.key === "Escape") closeModal();
+          return;
+        }
+        if (["ArrowRight", " "].includes(e.key)) {
+          e.preventDefault();
+          show(current + 1);
+        }
+        if (e.key === "ArrowLeft") show(current - 1);
+      });
+      const wrap = document.getElementById("modalWrap"),
+        text = document.getElementById("modalText");
+      document.querySelectorAll("[data-note]").forEach(
+        (b) =>
+          (b.onclick = () => {
+            text.textContent = b.dataset.note;
+            wrap.classList.add("show");
+            wrap.setAttribute("aria-hidden", "false");
+          }),
+      );
+      function closeModal() {
+        wrap.classList.remove("show");
+        wrap.setAttribute("aria-hidden", "true");
+      }
+      document.getElementById("close").onclick = closeModal;
+      wrap.onclick = (e) => {
+        if (e.target === wrap) closeModal();
+      };
+    </script>
+  </body>
+</html>
