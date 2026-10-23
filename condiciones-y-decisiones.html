@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>De la condición a la decisión · Ciencias de la Computación</title>
+<style>
+:root{--bg:#081322;--bg2:#0c1d32;--panel:#10243a;--panel2:#132c47;--line:rgba(177,216,249,.20);--text:#f4f8ff;--muted:#b5c8de;--cyan:#73e1ed;--blue:#8ab6ff;--green:#8ce8b4;--red:#ff9a9a;--yellow:#ffdc8d;--violet:#c2a9ff;--radius:20px}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
+button,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible{outline:3px solid var(--yellow);outline-offset:4px}
+button:disabled{opacity:.35;cursor:not-allowed}
+.app{height:100vh;height:100dvh;display:grid;grid-template-rows:64px minmax(0,1fr) 77px;background:radial-gradient(circle at 92% 9%,rgba(41,91,161,.24),transparent 34%),radial-gradient(circle at 7% 88%,rgba(23,124,141,.12),transparent 33%),linear-gradient(142deg,#07111e,#0b1a2d 62%,#071220)}
+.topbar,.bottom{display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,3vw,56px);gap:16px}
+.topbar{border-bottom:1px solid var(--line);background:rgba(8,19,34,.5)}
+.brand{display:flex;align-items:center;gap:12px;font-size:clamp(13px,1.12vw,17px);font-weight:780;letter-spacing:.01em;white-space:nowrap}
+.brandmark{width:30px;height:30px;border-radius:9px;background:linear-gradient(140deg,var(--cyan),var(--blue));display:grid;place-items:center;color:#092132;font-weight:900;font-size:16px}
+.top-right{display:flex;align-items:center;gap:16px;white-space:nowrap;color:var(--muted);font-size:clamp(12px,1vw,15px)}
+.sectiontag{color:var(--cyan);font-size:12px;text-transform:uppercase;letter-spacing:.16em;font-weight:850}
+.stage{position:relative;min-height:0;overflow:hidden}
+.slide{display:none;position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:clamp(16px,2.5vh,32px) clamp(28px,5vw,92px) clamp(18px,3vh,36px);scrollbar-color:#36516b transparent}
+.slide.active{display:flex;align-items:center;justify-content:center}
+.slide-inner{width:100%;max-width:1530px;margin:auto}
+.slide-inner.narrow{max-width:1200px}
+.kicker{color:var(--cyan);font-size:clamp(12px,1.05vw,18px);font-weight:850;letter-spacing:.17em;text-transform:uppercase;margin:0 0 12px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(54px,6.1vw,102px);letter-spacing:-.065em;line-height:.98;margin-bottom:25px;font-weight:860;max-width:1070px}
+h2{font-size:clamp(37px,4.25vw,68px);letter-spacing:-.056em;line-height:1.07;margin-bottom:18px;font-weight:830}
+h3{font-size:clamp(20px,1.8vw,29px);line-height:1.18;margin-bottom:12px}
+.lead{font-size:clamp(20px,2vw,32px);line-height:1.42;color:var(--muted);max-width:1120px;margin-bottom:24px}
+.big-lead{font-size:clamp(23px,2.5vw,40px);line-height:1.38;max-width:1060px}
+.accent{color:var(--cyan)}.accent-alt{color:var(--yellow)}
+.chip-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.chip{border:1px solid rgba(115,225,237,.32);color:#c8f8ff;border-radius:999px;background:rgba(115,225,237,.09);font-size:clamp(13px,1.08vw,17px);font-weight:780;padding:10px 16px}
+.panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,1.3vw,22px);align-items:stretch;margin-top:20px}
+.panels.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.panels.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.panel{border:1px solid var(--line);background:linear-gradient(160deg,rgba(20,47,72,.88),rgba(11,30,49,.92));border-radius:var(--radius);padding:clamp(17px,1.85vw,30px);min-width:0;box-shadow:0 14px 32px rgba(0,0,0,.10)}
+.panel.soft{background:rgba(21,44,66,.58)}
+.panel-title{font-size:clamp(15px,1.25vw,21px);font-weight:800;margin-bottom:12px;color:#d9e9fb}
+.panel p,.panel li{font-size:clamp(17px,1.45vw,23px);line-height:1.42;color:#d6e5f3;margin-bottom:8px}
+.panel .small{font-size:clamp(14px,1.1vw,17px);color:var(--muted)}
+.big-number{font-size:clamp(36px,3.9vw,66px);font-weight:850;line-height:1;color:var(--cyan)}
+.question{font-size:clamp(21px,2.25vw,37px);font-weight:690;line-height:1.34;margin-bottom:14px}
+.statement{font-size:clamp(22px,2.1vw,35px);font-weight:750;line-height:1.36}
+.rule{border:1px solid rgba(115,225,237,.38);background:rgba(50,116,144,.14);border-radius:16px;padding:16px 21px;font-size:clamp(20px,2.0vw,32px);font-weight:800;line-height:1.45;letter-spacing:-.02em;margin:14px 0}
+.rule.compact{font-size:clamp(18px,1.7vw,28px)}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;letter-spacing:-.025em}
+.callout{background:rgba(255,220,141,.09);border-left:4px solid var(--yellow);padding:14px 22px;border-radius:0 13px 13px 0;font-size:clamp(17px,1.5vw,24px);line-height:1.4;color:#ffedc1;margin-top:18px}
+.centered{text-align:center}.centered .lead{margin-left:auto;margin-right:auto}.centered .chip-row{justify-content:center}
+.big-btn,.answer-btn,.choice-btn,.subtle-btn{border:1px solid rgba(115,225,237,.36);border-radius:15px;padding:13px 20px;color:var(--text);background:#174360;font-weight:790;font-size:clamp(16px,1.28vw,20px);transition:background .16s,border-color .16s,transform .16s;min-height:48px}
+.big-btn:hover,.answer-btn:hover,.choice-btn:hover,.subtle-btn:hover{background:#205574;border-color:var(--cyan)}
+.big-btn:active,.choice-btn:active{transform:translateY(1px)}
+.big-btn.primary{background:var(--cyan);color:#092332;border-color:var(--cyan)}
+.big-btn.primary:hover{background:#a3f5f7}
+.answer-btn{background:rgba(28,69,95,.4)}
+.choice-btn.selected{color:#092332;background:var(--cyan);border-color:var(--cyan)}
+.subtle-btn{background:rgba(18,49,72,.55);font-size:clamp(14px,1.08vw,17px);padding:10px 15px}
+.button-row{display:flex;flex-wrap:wrap;gap:13px;align-items:center;margin-top:17px}
+.inline-note{font-size:clamp(14px,1.08vw,17px);line-height:1.4;color:var(--muted)}
+.switchbox{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:14px;background:rgba(9,27,47,.73);padding:14px 18px;font-size:clamp(17px,1.32vw,23px);font-weight:760;margin:8px 0}
+.switchbox button{flex-shrink:0;min-width:90px;border:1px solid rgba(255,255,255,.25);background:#293a4c;border-radius:12px;color:#d3dce8;padding:10px 12px;font-size:clamp(16px,1.3vw,22px);font-weight:850}
+.switchbox button.is-on{border-color:var(--green);background:#174b3a;color:#a5f9c5}
+.switchbox button.is-off{border-color:rgba(255,154,154,.4);color:#ffd0d0}
+.result{display:flex;gap:16px;align-items:center;border-radius:15px;padding:17px 20px;margin-top:14px;min-height:75px;background:rgba(63,85,111,.22);border:1px solid var(--line)}
+.result.good{border-color:rgba(140,232,180,.55);background:rgba(44,113,79,.20)}
+.result.bad{border-color:rgba(255,154,154,.5);background:rgba(132,54,68,.20)}
+.result.unknown{color:var(--muted)}
+.result .result-icon{font-size:clamp(26px,2.8vw,45px);font-weight:900}
+.result .result-text{font-size:clamp(18px,1.55vw,27px);font-weight:790;line-height:1.25}
+.result .explain{font-size:clamp(14px,1.1vw,17px);color:var(--muted);font-weight:480;margin-top:5px}
+.steps{counter-reset:step;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.step{opacity:.27;transition:opacity .2s,border-color .2s;border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:16px 20px;display:flex;align-items:center;gap:18px;font-size:clamp(17px,1.55vw,25px);min-height:72px}
+.step.visible{opacity:1;border-color:rgba(115,225,237,.42)}
+.step-index{font-size:clamp(22px,2.1vw,34px);font-weight:850;color:var(--cyan)}
+.scenario-number{font-size:clamp(12px,.95vw,16px);font-weight:900;color:var(--cyan);letter-spacing:.13em;margin-bottom:9px}
+.truth-bit{display:inline-flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:850;color:#10243a;border-radius:7px;width:38px;height:38px;font-size:23px;background:var(--green)}
+.truth-bit.false{background:var(--red)}
+.hint{color:var(--muted);font-size:clamp(15px,1.18vw,20px);line-height:1.4}
+.hidden-answer[hidden],.model-solution[hidden]{display:none !important}
+.hidden-answer{padding:13px 16px;background:rgba(140,232,180,.08);border:1px solid rgba(140,232,180,.3);border-radius:12px;color:#d5ffe7;margin-top:14px;font-size:clamp(16px,1.3vw,21px);line-height:1.45}
+.grid-test{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.test-card{padding:15px 18px;border-radius:14px;background:rgba(10,32,52,.79);border:1px solid var(--line)}
+.test-card .case-values{font-family:ui-monospace,monospace;font-size:clamp(17px,1.3vw,22px);line-height:1.45;color:#e2efff}
+.test-feedback{margin-top:7px;color:var(--yellow);font-weight:800;font-size:clamp(15px,1.2vw,20px)}
+pre.code{white-space:pre-wrap;overflow-wrap:anywhere;background:#081321;border:1px solid rgba(138,182,255,.30);border-radius:15px;color:#d7eaff;padding:18px 23px;font-size:clamp(17px,1.45vw,23px);line-height:1.52;margin:12px 0;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.editor-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:12px 0}
+select{color:var(--text);border:1px solid rgba(115,225,237,.45);border-radius:12px;background:#153a55;padding:10px 14px;min-width:120px;font-weight:800;font-size:clamp(16px,1.2vw,20px)}
+.checkbox-line{display:flex;align-items:center;gap:9px;font-size:clamp(17px,1.2vw,20px);color:#e5f2ff;font-weight:650}
+.checkbox-line input{width:23px;height:23px;accent-color:#73e1ed}
+.bottom{border-top:1px solid var(--line);background:rgba(6,18,32,.9)}
+.nav-left,.nav-right{display:flex;align-items:center;gap:12px}
+.nav-btn{border:1px solid rgba(171,217,248,.28);background:#142a43;color:var(--text);font-size:clamp(14px,1.05vw,18px);padding:12px 20px;border-radius:12px;font-weight:820;min-height:45px;white-space:nowrap}
+.nav-btn:hover:not(:disabled){background:#1c405c;border-color:var(--cyan)}
+.nav-btn.next{background:var(--cyan);color:#082331;border-color:var(--cyan)}
+.nav-btn.next:hover:not(:disabled){background:#a5f7fa}
+.slide-counter{font-weight:870;font-variant-numeric:tabular-nums;font-size:clamp(16px,1.2vw,20px);min-width:72px;text-align:center}
+.timebox{display:flex;align-items:center;gap:9px;font-variant-numeric:tabular-nums}
+.timer{color:var(--yellow);font-size:clamp(18px,1.35vw,23px);font-weight:900;letter-spacing:.035em;min-width:62px;text-align:center}
+.tiny{font-size:clamp(12px,1vw,15px);color:var(--muted)}
+.progress-track{position:absolute;height:4px;left:0;right:0;bottom:0;background:rgba(255,255,255,.10)}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#69e4ee,#b3a0ff);transition:width .28s}
+.notes{position:fixed;z-index:30;right:20px;bottom:90px;width:min(480px,calc(100vw - 40px));max-height:65vh;overflow:auto;background:#f6f8fc;color:#14263c;padding:22px 25px;border-radius:17px;box-shadow:0 20px 70px rgba(0,0,0,.58);border:3px solid var(--cyan)}
+.notes[hidden]{display:none}
+.notes h3{font-size:22px}.notes p{font-size:17px;line-height:1.5;color:#243b56}
+.footer-helper{font-size:13px;color:#95abc0}
+.svg-flow{width:100%;max-width:660px;max-height:330px;display:block;margin:auto}
+.illustration{width:100%;height:auto;max-height:300px}
+@media(max-width:1100px){.panels.four .panel{padding:12px 14px}.panels.four .panel p{font-size:17px;line-height:1.24;margin-bottom:3px}.panels.four .panel .rule{font-size:19px;margin:5px 0;padding:7px 11px}.panels.four .panel .answer-btn{padding:9px 13px;min-height:38px;font-size:15px}.panel{padding:17px}.panels.four{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-helper{display:none}.app{grid-template-rows:54px minmax(0,1fr) 69px} .slide{padding:17px 30px}}
+@media(max-width:680px){.app{grid-template-rows:50px minmax(0,1fr) 65px}.topbar,.bottom{padding:0 12px}.top-right .sectiontag{display:none}.slide{padding:22px 17px}.panels,.panels.three,.panels.four,.grid-test{grid-template-columns:1fr}.panel p,.panel li{font-size:18px}h1{font-size:50px}h2{font-size:38px}.nav-btn{padding:8px 11px;min-height:40px}.nav-left{gap:5px}.nav-right{gap:5px}.nav-btn.timer-toggle{display:none}.timebox .tiny{display:none}.slide-counter{min-width:53px}.brand{font-size:12px}.brandmark{width:25px;height:25px}.top-right{font-size:11px}}
+@media(max-height:720px) and (min-width:681px){.slide{padding-top:12px;padding-bottom:14px}.kicker{margin-bottom:7px}h2{margin-bottom:10px}.lead{margin-bottom:12px}.panels{margin-top:10px}.panel{padding:16px}.panel p{line-height:1.28}.callout{margin-top:8px;padding:9px 15px}.big-btn{padding:10px 17px;min-height:42px}.result{min-height:60px;padding:10px 14px}.rule{margin:8px 0;padding:10px 17px}.steps{margin:12px 0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="brand"><span class="brandmark" aria-hidden="true">{ }</span> Ciencias de la Computación</div>
+    <div class="top-right"><span class="sectiontag">Decisiones y algoritmos</span><span id="phaseLabel">Inicio</span><span id="totalTime" aria-label="Duración de la clase">90 min · total</span></div>
+  </header>
+  <main class="stage" id="stage" aria-live="off">
+
+    <section class="slide active" data-min="2" data-phase="Inicio" data-note="Presentá la consigna: ayer aprendieron Y, O y NO. Hoy los usan para construir y probar decisiones. No volver a explicar las tablas de verdad.">
+      <div class="slide-inner narrow">
+        <p class="kicker">Hoy · desafío práctico</p>
+        <h1>De la condición<br>a la <span class="accent">decisión.</span></h1>
+        <p class="lead big-lead">¿Cómo hacemos para que un programa decida correctamente?</p>
+        <div class="chip-row"><span class="chip">Pensar</span><span class="chip">Dibujar</span><span class="chip">Programar</span><span class="chip">Probar</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="5" data-phase="Desafío inicial" data-note="Pedir que levanten la mano antes de ejecutar. Condición: autorización Y documentación. Cambiar una entrada por vez, ejecutar y pedir justificación. La salida se actualiza solamente al pulsar 'Comprobar'.">
+      <div class="slide-inner">
+        <p class="kicker">01 · Pensemos</p>
+        <h2>¿Puede participar en la excursión?</h2>
+        <p class="lead">Solo puede participar quien tenga <strong>autorización Y documentación</strong>.</p>
+        <div class="panels">
+          <div class="panel">
+            <div class="panel-title">Cambien las condiciones</div>
+            <div class="switchbox">Tiene autorización <button type="button" class="is-on" id="hookAuth" aria-pressed="true">1 · Sí</button></div>
+            <div class="switchbox">Entregó documentación <button type="button" class="is-off" id="hookDoc" aria-pressed="false">0 · No</button></div>
+            <div class="button-row"><button class="big-btn primary" id="hookRun" type="button">Comprobar decisión →</button></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Predigan antes de ejecutar</div>
+            <div class="rule compact mono">autorización Y documentación</div>
+            <div class="result unknown" id="hookResult"><div class="result-icon">?</div><div><div class="result-text">¿Participa o no participa?</div><div class="explain">Voten y luego comprueben.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="3" data-phase="Recordatorio" data-note="Repaso oral de treinta segundos por operador, evitando volver a las tablas. La idea principal es tomar decisiones, no memorizar nombres.">
+      <div class="slide-inner">
+        <p class="kicker">Recordamos lo necesario</p>
+        <h2>La computadora evalúa condiciones.</h2>
+        <div class="panels three">
+          <div class="panel"><div class="big-number">Y</div><h3>Se cumplen ambas</h3><p>Dos condiciones necesarias.</p></div>
+          <div class="panel"><div class="big-number">O</div><h3>Al menos una</h3><p>Una o las dos alcanzan.</p></div>
+          <div class="panel"><div class="big-number">NO</div><h3>Invierte el valor</h3><p>De verdadero a falso o al revés.</p></div>
+        </div>
+        <div class="callout">La pregunta de hoy no es <strong>«¿qué significa?»</strong>, sino <strong>«¿qué hace el programa?»</strong>.</div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="8" data-phase="Actividad en parejas" data-note="Trabajo en parejas y cuaderno. Cada pareja debe anotar la salida 1 o 0 y justificarla. No revelar en esta diapositiva. Las respuestas aparecen en la siguiente.">
+      <div class="slide-inner">
+        <p class="kicker">Actividad 1 · 8 minutos · en parejas</p>
+        <h2>¿Qué devuelve el programa?</h2>
+        <p class="lead">Copien las cuatro situaciones. Respondan <strong>1</strong> o <strong>0</strong> y expliquen una.</p>
+        <div class="panels four">
+          <div class="panel"><div class="scenario-number">CASO 01</div><p><strong>Tarea terminada</strong> = 1</p><p><strong>Archivo guardado</strong> = 0</p><div class="rule compact mono">tarea Y archivo</div><p class="hint">Salida: _____</p></div>
+          <div class="panel"><div class="scenario-number">CASO 02</div><p><strong>Wi-Fi</strong> = 0</p><p><strong>Datos móviles</strong> = 1</p><div class="rule compact mono">wifi O datos</div><p class="hint">Salida: _____</p></div>
+          <div class="panel"><div class="scenario-number">CASO 03</div><p><strong>Bloqueado</strong> = 1</p><p>&nbsp;</p><div class="rule compact mono">NO bloqueado</div><p class="hint">Salida: _____</p></div>
+          <div class="panel"><div class="scenario-number">CASO 04</div><p><strong>Vidas</strong> = 0</p><p><strong>Escudo</strong> = 0</p><div class="rule compact mono">vidas O escudo</div><p class="hint">Salida: _____</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="5" data-phase="Corrección" data-note="Pedir los resultados en orden y preguntar '¿por qué?'. En el caso 03, recordar que NO trabaja sobre una sola condición. Mostrar las respuestas con el botón.">
+      <div class="slide-inner">
+        <p class="kicker">Puesta en común</p>
+        <h2>Comprobemos las respuestas.</h2>
+        <p class="lead">Antes de mostrarlas: ¿en qué caso dudaron más?</p>
+        <div class="panels four">
+          <div class="panel centered"><div class="panel-title">01 · Y</div><div class="big-number">1 Y 0</div><div class="hidden-answer" id="ans1" hidden>Resultado <strong>0</strong><br>Una condición es falsa.</div></div>
+          <div class="panel centered"><div class="panel-title">02 · O</div><div class="big-number">0 O 1</div><div class="hidden-answer" id="ans2" hidden>Resultado <strong>1</strong><br>Una condición es verdadera.</div></div>
+          <div class="panel centered"><div class="panel-title">03 · NO</div><div class="big-number">NO 1</div><div class="hidden-answer" id="ans3" hidden>Resultado <strong>0</strong><br>Invierte el 1.</div></div>
+          <div class="panel centered"><div class="panel-title">04 · O</div><div class="big-number">0 O 0</div><div class="hidden-answer" id="ans4" hidden>Resultado <strong>0</strong><br>Ninguna es verdadera.</div></div>
+        </div>
+        <div class="button-row"><button type="button" class="big-btn primary" data-reveal="ans1,ans2,ans3,ans4">Mostrar resultados</button></div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="7" data-phase="Depuración" data-note="Problema deliberado: requisito contraseña correcta Y cuenta activa; un programador puso O. Hacer que se den cuenta de que ingresaría alguien con solo una de las condiciones. Mostrar corrección después.">
+      <div class="slide-inner">
+        <p class="kicker">Actividad 2 · Detectives de errores</p>
+        <h2>Un operador cambió todo.</h2>
+        <div class="panels">
+          <div class="panel">
+            <p class="question">Una aplicación exige <span class="accent">contraseña correcta Y cuenta activa</span>.</p>
+            <p>Pero el programador escribió:</p>
+            <div class="rule mono">contraseña O cuenta_activa</div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Conversen de a dos</div>
+            <p>1. ¿Qué error cometió?</p>
+            <p>2. ¿Puede ingresar alguien con contraseña incorrecta y cuenta activa?</p>
+            <p>3. ¿Cómo se corrige?</p>
+            <button type="button" class="big-btn primary" data-reveal="bug1">Ver corrección</button>
+            <div id="bug1" class="hidden-answer" hidden><strong>Debe ser Y.</strong> Con O bastaría con que la cuenta estuviera activa, aunque la contraseña fuera incorrecta.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="5" data-phase="Algoritmos" data-note="Hacer participar al grupo. Pedir el paso siguiente antes de pulsar el botón. Presentar un algoritmo secuencial con una condición, sin exigir sintaxis de programación.">
+      <div class="slide-inner">
+        <p class="kicker">De las reglas a los algoritmos</p>
+        <h2>¿Cómo le explicamos los pasos?</h2>
+        <p class="lead">Problema: decidir si alguien puede ir a la excursión.</p>
+        <div class="steps" id="algoSteps">
+          <div class="step"><span class="step-index">01</span><span>Preguntar si tiene autorización.</span></div>
+          <div class="step"><span class="step-index">02</span><span>Preguntar si entregó documentación.</span></div>
+          <div class="step"><span class="step-index">03</span><span>Evaluar las dos condiciones con Y.</span></div>
+          <div class="step"><span class="step-index">04</span><span>Mostrar «Puede ir» o «No puede ir».</span></div>
+        </div>
+        <div class="button-row"><button type="button" class="big-btn primary" id="nextAlgo">Mostrar siguiente paso →</button><button type="button" class="subtle-btn" id="resetAlgo">Reiniciar</button></div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="10" data-phase="Diagrama de flujo" data-note="Consigna de cuaderno: dibujar un diagrama de flujo con inicio, entradas, rombo de decisión y dos salidas. Incluir ramas Sí y No. No mostrar modelo hasta últimos 2-3 minutos.">
+      <div class="slide-inner">
+        <p class="kicker">Actividad 3 · 10 minutos · cuaderno</p>
+        <h2>Ahora dibujalo como un diagrama.</h2>
+        <div class="panels">
+          <div class="panel">
+            <div class="panel-title">Sistema para excursiones</div>
+            <p>Pregunta por la autorización y la documentación.</p>
+            <p>Si <strong>ambas</strong> están entregadas: <span class="accent">«Puede participar»</span>.</p>
+            <p>Si falta alguna: <span class="accent-alt">«No puede participar»</span>.</p>
+            <div class="callout">Usá <strong>inicio → entrada → decisión → resultado → fin</strong>.</div>
+            <div class="button-row"><button type="button" class="big-btn" data-reveal="flowModel">Mostrar modelo</button></div>
+          </div>
+          <div class="panel" style="display:flex;align-items:center;justify-content:center">
+            <div id="flowPrompt" class="centered"><div class="big-number" style="font-size:95px">◇</div><p class="question">¿Dónde va el rombo?</p><p class="hint">Dibujá primero tu propuesta.</p></div>
+            <div id="flowModel" class="model-solution" hidden style="width:100%">
+              <svg class="svg-flow" viewBox="0 0 650 414" aria-label="Diagrama de flujo con inicio, datos, condición y dos resultados" role="img">
+                <defs><marker id="arrFlow" orient="auto" markerWidth="8" markerHeight="8" refX="7" refY="4"><path d="M0,0 L8,4 L0,8 Z" fill="#c7d9ee"/></marker></defs>
+                <rect x="260" y="9" width="130" height="40" rx="20" fill="#154b68" stroke="#73e1ed" stroke-width="2"/><text x="325" y="35" text-anchor="middle" font-size="21" fill="#effaff">Inicio</text>
+                <path d="M325 49 V78" stroke="#c7d9ee" stroke-width="2" marker-end="url(#arrFlow)"/>
+                <rect x="173" y="82" width="304" height="54" rx="8" fill="#183950" stroke="#8ab6ff" stroke-width="2"/><text x="325" y="105" text-anchor="middle" font-size="18" fill="white">Leer autorización</text><text x="325" y="126" text-anchor="middle" font-size="18" fill="white">y documentación</text>
+                <path d="M325 136 V165" stroke="#c7d9ee" stroke-width="2" marker-end="url(#arrFlow)"/>
+                <polygon points="325,167 482,217 325,267 168,217" fill="#39345e" stroke="#c2a9ff" stroke-width="2"/><text x="325" y="211" text-anchor="middle" font-size="18" fill="#fff">¿Autorización</text><text x="325" y="235" text-anchor="middle" font-size="18" fill="#fff">Y documentación?</text>
+                <path d="M168 217 H85 V284" fill="none" stroke="#c7d9ee" stroke-width="2" marker-end="url(#arrFlow)"/><path d="M482 217 H565 V284" fill="none" stroke="#c7d9ee" stroke-width="2" marker-end="url(#arrFlow)"/>
+                <text x="112" y="204" fill="#8ce8b4" font-weight="700" font-size="18">Sí</text><text x="516" y="204" fill="#ff9a9a" font-weight="700" font-size="18">No</text>
+                <rect x="5" y="290" width="160" height="48" rx="8" fill="#184635" stroke="#8ce8b4" stroke-width="2"/><text x="85" y="319" text-anchor="middle" font-size="17" fill="white">Puede participar</text>
+                <rect x="485" y="290" width="160" height="48" rx="8" fill="#512935" stroke="#ff9a9a" stroke-width="2"/><text x="565" y="319" text-anchor="middle" font-size="17" fill="white">No puede participar</text>
+                <path d="M85 338 V358 H325 M565 338 V358 H325 M325 358 V374" fill="none" stroke="#c7d9ee" stroke-width="2" marker-end="url(#arrFlow)"/>
+                <rect x="272" y="375" width="106" height="34" rx="17" fill="#154b68" stroke="#73e1ed" stroke-width="2"/><text x="325" y="398" text-anchor="middle" font-size="18" fill="white">Fin</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="5" data-phase="Verificación" data-note="Intercambiar cuadernos, simular mentalmente tres combinaciones y revisar si el diagrama manda a la rama correcta. Mostrar soluciones solo luego del intercambio.">
+      <div class="slide-inner">
+        <p class="kicker">Comprobación cruzada · 5 minutos</p>
+        <h2>¿Funciona tu diagrama?</h2>
+        <p class="lead">Intercambiá el cuaderno con otra pareja. Probá estos datos:</p>
+        <div class="panels three">
+          <div class="panel"><div class="panel-title">Prueba A</div><p>Autorización: <strong>1</strong></p><p>Documentación: <strong>1</strong></p><button class="answer-btn" data-reveal="flowA">Ver salida</button><div class="hidden-answer" id="flowA" hidden>Puede participar (1).</div></div>
+          <div class="panel"><div class="panel-title">Prueba B</div><p>Autorización: <strong>1</strong></p><p>Documentación: <strong>0</strong></p><button class="answer-btn" data-reveal="flowB">Ver salida</button><div class="hidden-answer" id="flowB" hidden>No puede participar (0).</div></div>
+          <div class="panel"><div class="panel-title">Prueba C</div><p>Autorización: <strong>0</strong></p><p>Documentación: <strong>1</strong></p><button class="answer-btn" data-reveal="flowC">Ver salida</button><div class="hidden-answer" id="flowC" hidden>No puede participar (0).</div></div>
+        </div>
+        <div class="callout">Si una prueba falla, no borres todo: buscá qué condición o flecha está equivocada.</div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="3" data-phase="Laboratorio" data-note="Introducir combinación de operadores. Primero se evalúa lo que está entre paréntesis, luego NO bloqueado, por último Y. Evitar hablar de precedencia sin necesidad. Es un sistema inventado para aprender, no un control de acceso seguro real.">
+      <div class="slide-inner narrow centered">
+        <p class="kicker">Segunda parte · laboratorio digital</p>
+        <h2>Construyamos un<br><span class="accent">control de acceso.</span></h2>
+        <p class="lead">Una persona puede entrar si tiene <strong>pase O invitación</strong>, pero solamente si <strong>NO está bloqueada</strong>.</p>
+        <div class="rule mono">(pase O invitación) Y NO bloqueado</div>
+        <div class="chip-row"><span class="chip">3 entradas</span><span class="chip">2 operadores combinados</span><span class="chip">1 decisión</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="7" data-phase="Simulador" data-note="Operar las entradas desde el proyector. Antes de ejecutar, pedir predicciones. Ejecutar al menos cuatro configuraciones. Dar énfasis al bloqueo: si está bloqueado, no entra aunque tenga pase.">
+      <div class="slide-inner">
+        <p class="kicker">Actividad 4 · laboratorio en vivo</p>
+        <h2>Probemos el programa.</h2>
+        <div class="panels">
+          <div class="panel">
+            <div class="panel-title">Entradas del sistema</div>
+            <div class="switchbox">Tiene pase <button id="gatePass" type="button" class="is-on" aria-pressed="true">1 · Sí</button></div>
+            <div class="switchbox">Tiene invitación <button id="gateInvite" type="button" class="is-off" aria-pressed="false">0 · No</button></div>
+            <div class="switchbox">Está bloqueado <button id="gateBlocked" type="button" class="is-off" aria-pressed="false">0 · No</button></div>
+            <div class="button-row"><button class="big-btn primary" type="button" id="gateRun">▶ Ejecutar</button><button class="subtle-btn" type="button" id="gateReset">Restablecer</button></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Regla del sistema</div>
+            <div class="rule compact mono">(pase O invitación)<br>Y NO bloqueado</div>
+            <div class="result unknown" id="gateResult"><div class="result-icon">?</div><div><div class="result-text">¿Acceso permitido?</div><div class="explain">Cambien datos y pulsen «Ejecutar».</div></div></div>
+            <p class="inline-note" id="gateTrace" style="margin-top:13px">Primero se comprueba el pase o la invitación; después, que no esté bloqueado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="7" data-phase="Pruebas" data-note="Cada grupo predice acceso/no acceso en cuaderno, luego una persona pulsa los cuatro botones para revelar. Respuestas: A sí, B no, C no, D sí.">
+      <div class="slide-inner">
+        <p class="kicker">Actividad 5 · casos de prueba</p>
+        <h2>¿Qué casos pasan la prueba?</h2>
+        <p class="lead">Regla: <strong>(pase O invitación) Y NO bloqueado</strong>. Anoten <strong>entra / no entra</strong>.</p>
+        <div class="panels four">
+          <div class="panel"><div class="scenario-number">CASO A</div><p>Pase: <b>1</b></p><p>Invitación: <b>0</b></p><p>Bloqueado: <b>0</b></p><button class="answer-btn" data-test="A">Comprobar A</button><div class="test-feedback" id="testA" aria-live="polite"></div></div>
+          <div class="panel"><div class="scenario-number">CASO B</div><p>Pase: <b>0</b></p><p>Invitación: <b>1</b></p><p>Bloqueado: <b>1</b></p><button class="answer-btn" data-test="B">Comprobar B</button><div class="test-feedback" id="testB" aria-live="polite"></div></div>
+          <div class="panel"><div class="scenario-number">CASO C</div><p>Pase: <b>0</b></p><p>Invitación: <b>0</b></p><p>Bloqueado: <b>0</b></p><button class="answer-btn" data-test="C">Comprobar C</button><div class="test-feedback" id="testC" aria-live="polite"></div></div>
+          <div class="panel"><div class="scenario-number">CASO D</div><p>Pase: <b>1</b></p><p>Invitación: <b>1</b></p><p>Bloqueado: <b>0</b></p><button class="answer-btn" data-test="D">Comprobar D</button><div class="test-feedback" id="testD" aria-live="polite"></div></div>
+        </div>
+        <div class="callout">¿Qué condición puede impedir el acceso incluso cuando alguien tiene pase?</div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="5" data-phase="Comparación" data-note="Cambiar entre O y Y con las mismas entradas, sin cambiar los valores. Discutir qué usuario dejaría de entrar al exigir ambos requisitos. Resultado con pase 1, invitación 0, bloqueado 0: O = sí, Y = no.">
+      <div class="slide-inner">
+        <p class="kicker">Experimento · cambiamos una sola cosa</p>
+        <h2>¿Y si reemplazamos O por Y?</h2>
+        <p class="lead">Mantenemos los mismos datos: pase <strong>1</strong>, invitación <strong>0</strong>, bloqueado <strong>0</strong>.</p>
+        <div class="panels">
+          <div class="panel"><div class="panel-title">Elegí el operador</div><div class="button-row"><button class="choice-btn selected" id="compareOR" type="button" aria-pressed="true">O · basta uno</button><button class="choice-btn" id="compareAND" type="button" aria-pressed="false">Y · hacen falta ambos</button></div><div class="rule mono compact" id="compareRule">(pase O invitación) Y NO bloqueado</div></div>
+          <div class="panel"><div class="panel-title">Resultado con los mismos datos</div><div class="result good" id="compareResult"><div class="result-icon">✓</div><div><div class="result-text">Acceso permitido</div><div class="explain">Con O alcanza con tener pase.</div></div></div><p class="hint" style="margin-top:17px">¿Cambiar un operador cambió la decisión?</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="7" data-phase="Crear y probar" data-note="Laboratorio de reglas personalizables: elegir Y/O, mantener o quitar NO bloqueado, modificar entradas. Pedir que inventen dos configuraciones que permitan acceso y dos que lo impidan. La salida se calcula inmediatamente para facilitar experimentación; se muestra pseudocódigo generado.">
+      <div class="slide-inner">
+        <p class="kicker">Actividad 6 · diseñá tu propia regla</p>
+        <h2>Ahora vos cambiás el programa.</h2>
+        <div class="panels">
+          <div class="panel">
+            <div class="editor-row"><label for="ruleSelect" class="panel-title" style="margin:0">Operador entre pase e invitación:</label><select id="ruleSelect"><option value="OR">O</option><option value="AND">Y</option></select></div>
+            <label class="checkbox-line"><input type="checkbox" id="ruleBlocked" checked> Exigir que NO esté bloqueado</label>
+            <div class="switchbox">Pase <button id="rulePass" class="is-on" type="button">1 · Sí</button></div>
+            <div class="switchbox">Invitación <button id="ruleInvite" class="is-off" type="button">0 · No</button></div>
+            <div class="switchbox">Bloqueado <button id="ruleIsBlocked" class="is-off" type="button">0 · No</button></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">El programa que creaste</div>
+            <pre class="code" id="ruleCode" aria-live="polite">SI (pase O invitación) Y NO bloqueado
+    MOSTRAR «Acceso permitido»
+SINO
+    MOSTRAR «Acceso denegado»</pre>
+            <div class="result good" id="ruleResult"><div class="result-icon">✓</div><div><div class="result-text">Acceso permitido</div><div class="explain">Resultado de tu regla.</div></div></div>
+          </div>
+        </div>
+        <p class="inline-note" style="margin-top:12px">Desafío: encontrá dos configuraciones que permitan entrar y dos que lo impidan.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-min="4" data-phase="Depuración final" data-note="Mostrar el caso en que no hay pase ni invitación y no está bloqueado. La regla errónea da permiso aunque no exista un medio de acceso. Corregir O exterior por Y. Pedir explicación, no solo nombre del operador.">
+      <div class="slide-inner">
+        <p class="kicker">Último desafío · encontrá el fallo</p>
+        <h2>¡El sistema dejó entrar a cualquiera!</h2>
+        <p class="lead">Alguien sin pase, sin invitación y sin bloqueo consiguió entrar.</p>
+        <div class="panels">
+          <div class="panel"><div class="panel-title">Código con un error</div><div class="rule mono">(pase O invitación) O NO bloqueado</div><p class="hint">Datos: pase = 0 · invitación = 0 · bloqueado = 0</p></div>
+          <div class="panel"><div class="panel-title">¿Cuál es el problema?</div><p>Explicá por qué dejó entrar a esa persona y cómo arreglarlo.</p><button type="button" class="big-btn primary" data-reveal="finalBug">Mostrar solución</button><div class="hidden-answer" id="finalBug" hidden>El <strong>O</strong> exterior debe ser <strong>Y</strong>.<br><span class="mono">(pase O invitación) Y NO bloqueado</span><br>Que no esté bloqueado no alcanza por sí solo.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="5" data-phase="Ticket de salida" data-note="Solicitar respuestas individuales en 5 minutos. Corregir oralmente al final. Respuestas: 1 NO (0) porque está bloqueado; 2 Y; 3 probar combinaciones de entradas y comparar con lo esperado.">
+      <div class="slide-inner">
+        <p class="kicker">Ticket de salida · individual · 5 minutos</p>
+        <h2>Antes de terminar…</h2>
+        <div class="panels three">
+          <div class="panel"><div class="scenario-number">PREGUNTA 01</div><p>Con pase = <strong>0</strong>, invitación = <strong>1</strong> y bloqueado = <strong>1</strong>, ¿puede entrar?</p></div>
+          <div class="panel"><div class="scenario-number">PREGUNTA 02</div><p>Si una aplicación exige <strong>dos condiciones obligatorias</strong>, ¿qué operador usarías?</p></div>
+          <div class="panel"><div class="scenario-number">PREGUNTA 03</div><p>¿Cómo comprobarías si tu programa toma decisiones correctas?</p></div>
+        </div>
+        <div class="button-row"><button class="big-btn" data-reveal="ticketAnswer">Ver respuestas orientativas</button></div>
+        <div class="hidden-answer" id="ticketAnswer" hidden>1. <strong>No</strong>: está bloqueado. · 2. <strong>Y</strong>. · 3. <strong>Probando distintas entradas</strong> y comparando el resultado con la regla.</div>
+      </div>
+    </section>
+
+    <section class="slide" data-min="2" data-phase="Cierre" data-note="Cerrar relacionando operadores, algoritmos, decisiones y errores. Registrar participación, identificación de condiciones y capacidad de probar casos. Preguntar qué pasaría en un videojuego si la condición estuviera mal escrita.">
+      <div class="slide-inner narrow centered">
+        <p class="kicker">Cierre · lo que logramos hoy</p>
+        <h2>Un programa toma decisiones<br>según las <span class="accent">reglas que escribimos.</span></h2>
+        <p class="lead">Hoy diseñamos algoritmos, probamos condiciones y encontramos errores.</p>
+        <div class="chip-row"><span class="chip">Condiciones</span><span class="chip">Algoritmos</span><span class="chip">Pruebas</span><span class="chip">Corrección de errores</span></div>
+        <div class="callout" style="text-align:left;max-width:860px;margin:28px auto 0">Una sola palabra —<strong>Y</strong> u <strong>O</strong>— puede cambiar lo que hace un programa.</div>
+      </div>
+    </section>
+  </main>
+  <footer class="bottom">
+    <div class="nav-left">
+      <span class="slide-counter" id="slideCounter" aria-live="polite">1 / 17</span>
+      <span class="tiny" id="slideDuration">2 min</span>
+      <button class="subtle-btn" type="button" id="notesToggle" title="Notas para el docente (N)" aria-expanded="false">Notas</button>
+    </div>
+    <div class="timebox"><button class="subtle-btn timer-toggle" type="button" id="timerToggle" title="Iniciar o pausar cronómetro (T)">▶ Tiempo</button><span class="timer" id="timerDisplay" aria-label="Tiempo restante">02:00</span><button class="subtle-btn" type="button" id="timerReset" title="Reiniciar temporizador de esta diapositiva">↺</button></div>
+    <div class="nav-right"><span class="footer-helper">← → avanzar · F pantalla completa</span><button class="nav-btn" type="button" id="prevBtn">← Atrás</button><button class="nav-btn next" type="button" id="nextBtn">Siguiente →</button></div>
+    <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+  </footer>
+  <aside id="teacherNotes" class="notes" role="complementary" hidden><h3>Notas para el docente</h3><p id="notesText"></p><p style="font-size:14px;color:#516987">Ocultar: tecla N o botón «Notas». Se muestran sobre el proyector mientras están abiertas.</p></aside>
+</div>
+<script>
+(function(){
+'use strict';
+const slides=Array.from(document.querySelectorAll('.slide'));
+const $=id=>document.getElementById(id);
+let current=0, remaining=120, timerRunning=false, tickHandle=null;
+const fmt=(sec)=>String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+function pauseTimer(){timerRunning=false;clearInterval(tickHandle);tickHandle=null;$('timerToggle').textContent='▶ Tiempo';}
+function setTimer(){remaining=Number(slides[current].dataset.min)*60;$('timerDisplay').textContent=fmt(remaining);}
+function startTimer(){if(timerRunning)return;if(remaining<=0)setTimer();timerRunning=true;$('timerToggle').textContent='Ⅱ Pausa';tickHandle=setInterval(()=>{if(remaining>0){remaining--; $('timerDisplay').textContent=fmt(remaining)}if(remaining===0){pauseTimer();$('timerDisplay').style.color='var(--red)'}},1000)}
+function showSlide(i){if(i<0||i>=slides.length)return;pauseTimer();$('timerDisplay').style.color='var(--yellow)';slides[current].classList.remove('active');current=i;const s=slides[i];s.classList.add('active');s.scrollTop=0;$('slideCounter').textContent=(i+1)+' / '+slides.length;$('slideDuration').textContent=s.dataset.min+' min';$('phaseLabel').textContent=s.dataset.phase||'Actividad';$('progressFill').style.width=((i+1)/slides.length*100)+'%';$('prevBtn').disabled=(i===0);$('nextBtn').disabled=(i===slides.length-1);$('nextBtn').textContent=i===slides.length-1?'Fin de clase ✓':'Siguiente →';setTimer();closeNotes();}
+function closeNotes(){$('teacherNotes').hidden=true;$('notesToggle').setAttribute('aria-expanded','false')}
+function toggleNotes(){const wasHidden=$('teacherNotes').hidden;$('teacherNotes').hidden=!wasHidden;$('notesToggle').setAttribute('aria-expanded',String(wasHidden));$('notesText').textContent=slides[current].dataset.note||'Sin notas para esta diapositiva.';}
+$('nextBtn').addEventListener('click',()=>showSlide(current+1));
+$('prevBtn').addEventListener('click',()=>showSlide(current-1));
+$('notesToggle').addEventListener('click',toggleNotes);
+$('timerToggle').addEventListener('click',()=>timerRunning?pauseTimer():startTimer());
+$('timerReset').addEventListener('click',()=>{pauseTimer();setTimer();$('timerDisplay').style.color='var(--yellow)'});
+document.addEventListener('keydown',ev=>{
+  const el=document.activeElement;const editing=el && ['INPUT','TEXTAREA','SELECT'].includes(el.tagName);
+  if(editing && !['Escape'].includes(ev.key))return;
+  if(ev.key==='ArrowRight'||(ev.key===' ' && el===document.body)){ev.preventDefault();showSlide(current+1)}
+  else if(ev.key==='ArrowLeft'){ev.preventDefault();showSlide(current-1)}
+  else if(ev.key==='Home'){ev.preventDefault();showSlide(0)}
+  else if(ev.key==='End'){ev.preventDefault();showSlide(slides.length-1)}
+  else if(ev.key.toLowerCase()==='f' && !ev.ctrlKey && !ev.metaKey){ev.preventDefault();if(document.fullscreenElement){document.exitFullscreen?.()}else{document.getElementById('app').requestFullscreen?.().catch(()=>{})}}
+  else if(ev.key.toLowerCase()==='n'){ev.preventDefault();toggleNotes()}
+  else if(ev.key.toLowerCase()==='t'){ev.preventDefault();timerRunning?pauseTimer():startTimer()}
+  else if(ev.key==='Escape'){closeNotes()}
+});
+function updateSwitch(btn,val){btn.dataset.value=val?'1':'0';btn.classList.toggle('is-on',val);btn.classList.toggle('is-off',!val);btn.textContent=(val?'1 · Sí':'0 · No');btn.setAttribute('aria-pressed',String(val));}
+function setupSwitch(id,onChange){const btn=$(id);if(!btn)return;const initial=btn.classList.contains('is-on');updateSwitch(btn,initial);btn.addEventListener('click',()=>{updateSwitch(btn,btn.dataset.value!=='1');onChange?.()})}
+const bit=id=>$(id).dataset.value==='1';
+function result(el,allowed,title,detail){el.className='result '+(allowed?'good':'bad');el.innerHTML='<div class="result-icon">'+(allowed?'✓':'×')+'</div><div><div class="result-text">'+title+'</div><div class="explain">'+detail+'</div></div>';}
+function unsetResult(el,title){el.className='result unknown';el.innerHTML='<div class="result-icon">?</div><div><div class="result-text">'+title+'</div><div class="explain">Datos modificados: ejecutá otra vez.</div></div>'}
+setupSwitch('hookAuth',()=>unsetResult($('hookResult'),'¿Participa o no participa?'));
+setupSwitch('hookDoc',()=>unsetResult($('hookResult'),'¿Participa o no participa?'));
+$('hookRun').addEventListener('click',()=>{const ok=bit('hookAuth')&&bit('hookDoc');result($('hookResult'),ok,ok?'Puede participar':'No puede participar',ok?'Ambas condiciones son 1.':'La condición Y no se cumple en ambas entradas.')});
+const algo=Array.from(document.querySelectorAll('#algoSteps .step'));let shownSteps=0;
+function drawSteps(){algo.forEach((el,i)=>el.classList.toggle('visible',i<shownSteps));$('nextAlgo').disabled=shownSteps===algo.length;$('nextAlgo').textContent=shownSteps===algo.length?'Pasos completos ✓':'Mostrar siguiente paso →'}
+$('nextAlgo').addEventListener('click',()=>{shownSteps=Math.min(algo.length,shownSteps+1);drawSteps()});
+$('resetAlgo').addEventListener('click',()=>{shownSteps=0;drawSteps()});drawSteps();
+document.querySelectorAll('[data-reveal]').forEach(btn=>{btn.addEventListener('click',()=>{const ids=btn.dataset.reveal.split(',');const targets=ids.map(id=>$(id));const show=targets.some(el=>el.hidden);targets.forEach(el=>el.hidden=!show);if(ids.includes('flowModel'))$('flowPrompt').hidden=show;btn.textContent=show?'Ocultar solución':'Mostrar solución';if(ids.includes('ans1'))btn.textContent=show?'Ocultar resultados':'Mostrar resultados';if(ids.includes('ticketAnswer'))btn.textContent=show?'Ocultar respuestas':'Ver respuestas orientativas';if(ids.includes('flowModel'))btn.textContent=show?'Ocultar modelo':'Mostrar modelo'})});
+setupSwitch('gatePass',()=>unsetResult($('gateResult'),'¿Acceso permitido?'));
+setupSwitch('gateInvite',()=>unsetResult($('gateResult'),'¿Acceso permitido?'));
+setupSwitch('gateBlocked',()=>unsetResult($('gateResult'),'¿Acceso permitido?'));
+$('gateRun').addEventListener('click',()=>{const access=bit('gatePass')||bit('gateInvite'),unblocked=!bit('gateBlocked'),ok=access&&unblocked;result($('gateResult'),ok,ok?'ACCESO PERMITIDO':'ACCESO DENEGADO',ok?'Se cumple toda la regla.':'La regla completa no se cumple.');$('gateTrace').textContent='(pase O invitación) = '+Number(access)+' · NO bloqueado = '+Number(unblocked)+' · resultado = '+Number(ok)});
+$('gateReset').addEventListener('click',()=>{updateSwitch($('gatePass'),true);updateSwitch($('gateInvite'),false);updateSwitch($('gateBlocked'),false);$('gateResult').className='result unknown';$('gateResult').innerHTML='<div class="result-icon">?</div><div><div class="result-text">¿Acceso permitido?</div><div class="explain">Cambien datos y pulsen «Ejecutar».</div></div>';$('gateTrace').textContent='Primero se comprueba el pase o la invitación; después, que no esté bloqueado.'});
+const tests={A:[true,false,false],B:[false,true,true],C:[false,false,false],D:[true,true,false]};
+document.querySelectorAll('[data-test]').forEach(btn=>{btn.addEventListener('click',()=>{const [p,i,b]=tests[btn.dataset.test],ok=(p||i)&&!b;const el=$('test'+btn.dataset.test);const revealed=Boolean(el.textContent.trim());el.textContent=revealed?'':(ok?'✓ ENTRA (1)':'× NO ENTRA (0)');btn.textContent=revealed?'Comprobar '+btn.dataset.test:'Ocultar resultado'})});
+let compareOp='OR';
+function updateCompare(){const or=compareOp==='OR';$('compareOR').classList.toggle('selected',or);$('compareAND').classList.toggle('selected',!or);$('compareOR').setAttribute('aria-pressed',String(or));$('compareAND').setAttribute('aria-pressed',String(!or));$('compareRule').textContent='(pase '+(or?'O':'Y')+' invitación) Y NO bloqueado';result($('compareResult'),or,or?'Acceso permitido':'Acceso denegado',or?'Con O alcanza con tener pase.':'Con Y también haría falta la invitación.')}
+$('compareOR').addEventListener('click',()=>{compareOp='OR';updateCompare()});$('compareAND').addEventListener('click',()=>{compareOp='AND';updateCompare()});
+function updateRule(){const or=$('ruleSelect').value==='OR',requireNotBlocked=$('ruleBlocked').checked,p=bit('rulePass'),i=bit('ruleInvite'),b=bit('ruleIsBlocked');const prelim=or?(p||i):(p&&i),ok=prelim&&(!requireNotBlocked||!b);const c='(pase '+(or?'O':'Y')+' invitación)'+(requireNotBlocked?' Y NO bloqueado':'');$('ruleCode').textContent='SI '+c+'\n    MOSTRAR «Acceso permitido»\nSINO\n    MOSTRAR «Acceso denegado»';result($('ruleResult'),ok,ok?'Acceso permitido':'Acceso denegado',requireNotBlocked?'Se evalúan el permiso de entrada y el bloqueo.':'Se evalúa únicamente pase / invitación.')}
+setupSwitch('rulePass',updateRule);setupSwitch('ruleInvite',updateRule);setupSwitch('ruleIsBlocked',updateRule);$('ruleSelect').addEventListener('change',updateRule);$('ruleBlocked').addEventListener('change',updateRule);updateRule();
+showSlide(0);
+})();
+</script>
+</body>
+</html>
